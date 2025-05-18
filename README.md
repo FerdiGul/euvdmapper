@@ -62,13 +62,13 @@ watchlist:
 
 ## 📦 Installation
 
-Install via `pip`:
+** PYPI
+You can install **euvdmapper** directly from [PyPI](https://pypi.org/project/euvdmapper/):
 
 ```bash
-pip install .
-```
+pip install euvdmapper
 
-Or install from source:
+** Install from source:
 
 ```bash
 git clone https://github.com/FerdiGul/euvdmapper.git
