@@ -143,9 +143,9 @@ euvdmapper --input watchlist.yaml --alerts
 
 ## 📸 Preview
 
-> _(Replace this with a screenshot of your actual HTML report if available)_
+<img width="1458" alt="IMG2" src="https://github.com/user-attachments/assets/33526ca5-ae6d-4663-8ed2-adcaebdec16c" />
+<img width="1445" alt="IMG1" src="https://github.com/user-attachments/assets/2f18cd03-bcbd-4cce-8a8c-12379da595ab" />
 
-![report-preview](docs/preview.png)
 
 ---
 
