@@ -80,7 +80,7 @@ pip install .
 You can run the CLI tool via terminal:
 
 ```bash
-euvdmapper --help
+euvdmapper -h
 ```
 
 ### 🔍 Examples
