@@ -3,7 +3,7 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)
 ![PyPI version](https://img.shields.io/pypi/v/euvdmapper)
-![Downloads](https://img.shields.io/pypi/dm/euvdmapper)
+[![Downloads](https://img.shields.io/pypi/dm/euvdmapper)](https://pypi.org/project/euvdmapper/)
 
 
 > ⚙️ ENISA EUVD Data Retriever and Formatter  
