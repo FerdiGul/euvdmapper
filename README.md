@@ -121,6 +121,10 @@ euvdmapper --keyword firewall --vendor Fortinet
 
 euvdmapper --keyword firewall --vendor Fortinet --product FortiGate --output combo.json
     Full filter: keyword + vendor + product with export.
+
+euvdmapper --input watchlist.yaml --alerts
+    Loads a YAML-based custom vendor/product watchlist and generates interactive HTML + CSV
+    reports with CVSS-based risk levels, alt IDs, and filterable UI.
 ```
 
 ---
