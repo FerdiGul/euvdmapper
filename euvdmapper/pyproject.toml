@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "euvdmapper"  # ← pip install sonrası görünen ad
-version = "v1.3"      # ← pip install sonrası versiyon
+version = "v1.4"      # ← pip install sonrası versiyon
 description = "ENISA EUVD data fetcher and formatter"
 readme = "README.md"
 authors = [
