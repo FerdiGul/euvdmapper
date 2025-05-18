@@ -58,7 +58,6 @@ watchlist:
   - vendor: Cisco
     product: IOS
 
----
 
 ## 📦 Installation
 
@@ -67,6 +66,7 @@ You can install **euvdmapper** directly from [PyPI](https://pypi.org/project/euv
 
 ```bash
 pip install euvdmapper
+```
 
 ** Install from source:
 
@@ -76,7 +76,6 @@ cd euvdmapper
 pip install .
 ```
 
----
 
 ## 🚀 Usage
 
