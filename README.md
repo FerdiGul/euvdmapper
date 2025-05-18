@@ -42,12 +42,12 @@ Fetch latest exploited vulnerabilities using ENISA’s public API.
 - ASCII art banner shown conditionally based on terminal width  
 - Clean fallback mode for small terminal displays
 
- ---
-## 📋 YAML Watchlist Format (for Alert Mode)
+---
+### 📋 YAML Watchlist Format (for Alert Mode)
 
 To use the `--input <file>.yaml --alerts` feature, your YAML file **must** define both `vendor` and `product` fields for each entry.
 
-### Example watchlist.yaml:
+### Example `watchlist.yaml`:
 
 ```yaml
 watchlist:
@@ -58,7 +58,6 @@ watchlist:
   - vendor: Cisco
     product: IOS
 
----
 ## 📦 Installation
 
 ** PYPI
@@ -73,7 +72,6 @@ pip install euvdmapper
 git clone https://github.com/FerdiGul/euvdmapper.git
 cd euvdmapper
 pip install .
-```
 ---
 
 ## 🚀 Usage
