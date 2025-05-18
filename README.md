@@ -10,22 +10,35 @@
 
 ---
 
-## ✨ Features
+✨ Features
 
-- 🔍 **Flexible Search**: Query vulnerabilities by keyword, vendor, product, or any combination
-- 📤 **Multiple Export Formats**: Output results as `.json`, `.csv`, or interactive `.html` reports
-- 🧠 **Smart HTML Reporting**:
-  - CVSS-based risk coloring (Low/Medium/High/Critical)
-  - Filter by vendor, product, or CVSS score
-  - In-browser search and printable layout
-- 🔎 **Lookup Utilities**:
-  - Search by CVE ID or EUVD ID
-  - Get alias mappings and extended metadata
-- ⚠️ **Live Threat Feed**:
-  - Fetch latest exploited vulnerabilities using ENISA’s public API
-- 🖥️ **Responsive Terminal Experience**:
-  - ASCII art displayed conditionally based on terminal width
-  - Clean fallback view for narrow terminals
+🔍 **Flexible Search**  
+Query vulnerabilities by keyword, vendor, product, or any combination.
+
+📤 **Multiple Export Formats**  
+Output results as `.json`, `.csv`, or interactive `.html` reports.
+
+🧠 **Smart HTML Reporting**  
+- CVSS-based risk coloring (Low / Medium / High / Critical)  
+- Filter by vendor, product, or CVSS score  
+- In-browser search and printable layout
+
+🔎 **Lookup Utilities**  
+- Search by CVE ID or EUVD ID  
+- Get alias mappings and extended metadata
+
+⚠️ **Live Threat Feed**  
+Fetch latest exploited vulnerabilities using ENISA’s public API.
+
+📌 **Customized Watchlist Alerts**  
+- YAML-powered alerting system based on specific vendor/product pairs  
+- Generates filtered `.csv` and `.html` reports  
+- Automatically highlights high/critical vulnerabilities for watched assets
+
+🖥️ **Responsive Terminal Experience**  
+- ASCII art banner shown conditionally based on terminal width  
+- Clean fallback mode for small terminal displays
+
   
 ## 📋 YAML Watchlist Format (for Alert Mode)
 
