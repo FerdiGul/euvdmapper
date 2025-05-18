@@ -98,8 +98,8 @@ euvdmapper --keyword fortinet --output fortinet.html
 euvdmapper --keyword google --output google.json
     Exports data in JSON format.
 
-euvdmapper --lookup-cve CVE-2024-1234 --output cve_details.csv
-    Looks up by CVE ID and exports to CSV.
+euvdmapper --lookup-cve CVE-2024-1234
+    Looks up by CVE ID and prints to terminal.
 
 euvdmapper --lookup-euvd EUVD-2024-5678
     Looks up by EUVD ID and prints to terminal.
