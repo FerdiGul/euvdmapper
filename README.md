@@ -1,4 +1,4 @@
-# EUVD Mapper v1.2
+# EUVD Mapper v1.3
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)
