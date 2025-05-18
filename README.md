@@ -1,7 +1,7 @@
 # EUVD Mapper
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
+![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)
 
 > ⚙️ ENISA EUVD Data Retriever and Formatter  
 > Fetch, filter, and format data from ENISA’s Exploited Vulnerabilities Database (EUVD) with ease.
