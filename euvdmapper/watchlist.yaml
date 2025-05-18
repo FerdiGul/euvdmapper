@@ -1,0 +1,8 @@
+watchlist:
+  - vendor: Microsoft
+    product: Windows 10
+  - vendor: Fortinet
+    product: FortiOS
+  - vendor: Ivanti
+    product: Connect Secure
+

@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "euvdmapper"  # ← pip install sonrası görünen ad
+version = "v1.0"      # ← pip install sonrası versiyon
+description = "ENISA EUVD data fetcher and formatter"
+readme = "README.md"
+authors = [
+    { name = "Ferdi Gül", email = "0xfrd1gul@gmail.com" }
+]
+license = "MIT"
+requires-python = ">=3.7"
+dependencies = [
+    "httpx>=0.23.0",
+    "pyyaml>=6.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/FerdiGul/euvdmapper"
+Repository = "https://github.com/FerdiGul/euvdmapper"
+Issues = "https://github.com/FerdiGul/euvdmapper/issues"
+LinkedIn = "https://www.linkedin.com/in/gulferdi/"
+
+[project.scripts]
+euvdmapper = "euvdmapper.cli:main"
+
+[tool.setuptools]
+packages = ["euvdmapper"]

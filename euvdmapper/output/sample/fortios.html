@@ -1,0 +1,1730 @@
+
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>EUVD Vulnerability Report</title>
+        <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            h1 { font-size: 24px; }
+            input, select, button {
+                margin: 5px;
+                padding: 8px;
+                font-size: 14px;
+            }
+            table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+            th, td { border: 1px solid #ddd; padding: 8px; vertical-align: top; }
+            th { background-color: #f2f2f2; }
+            td { font-size: 12px; }
+            .low-risk { background-color: #d4edda; }
+            .medium-risk { background-color: #fff3cd; }
+            .high-risk { background-color: #ffe5b4; }
+            .critical-risk { background-color: #f8d7da; }
+        </style>
+        <script>
+            function searchTable() {
+                let input = document.getElementById("searchInput").value.toLowerCase();
+                filterTable(input);
+            }
+            function filterTable(filterText = "") {
+                let vendor = document.getElementById("vendorFilter").value.toLowerCase();
+                let product = document.getElementById("productFilter").value.toLowerCase();
+                let cvssRange = document.getElementById("cvssFilter").value;
+                let rows = document.querySelectorAll("table tbody tr");
+                rows.forEach(function(row) {
+                    let text = row.textContent.toLowerCase();
+                    let vendorText = row.cells[6].textContent.toLowerCase();
+                    let productText = row.cells[5].textContent.toLowerCase();
+                    let cvssScore = parseFloat(row.cells[3].textContent.split(":").pop()) || 0;
+                    let cvssMatch = (
+                        (cvssRange === "all") ||
+                        (cvssRange === "critical" && cvssScore >= 9.0) ||
+                        (cvssRange === "high" && cvssScore >= 8.0 && cvssScore < 9.0) ||
+                        (cvssRange === "medium" && cvssScore >= 5.0 && cvssScore < 8.0) ||
+                        (cvssRange === "low" && cvssScore < 5.0)
+                    );
+                    let match = text.includes(filterText) &&
+                                 vendorText.includes(vendor) &&
+                                 productText.includes(product) &&
+                                 cvssMatch;
+                    row.style.display = match ? "": "none";
+                });
+            }
+            function exportPDF() {
+                window.print();
+            }
+        </script>
+    </head>
+    <body>
+        <h1>EUVD Vulnerability Report</h1>
+        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search in report...">
+        <select id="vendorFilter" onchange="filterTable()">
+            <option value="">Filter by Vendor</option>
+        </select>
+        <select id="productFilter" onchange="filterTable()">
+            <option value="">Filter by Product</option>
+        </select>
+        <select id="cvssFilter" onchange="filterTable()">
+            <option value="all">All CVSS</option>
+            <option value="critical">Critical (9.0+)</option>
+            <option value="high">High (8.0 - 8.9)</option>
+            <option value="medium">Medium (5.0 - 7.9)</option>
+            <option value="low">Low (< 5.0)</option>
+        </select>
+        <button onclick="exportPDF()">Export PDF</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>EUVD_ID</th><th>Alt_IDs</th><th>Exploitation</th><th>CVSS</th><th>EPSS</th><th>Product</th>
+                    <th>Vendor</th><th>Changed</th><th>Summary</th><th>Version</th>
+                    <th>Published</th><th>Updated</th><th>References</th>
+                </tr>
+            </thead>
+            <tbody>
+    
+        <tr class="critical-risk">
+            <td>EUVD-2025-14705</td>
+            <td>CVE-2025-32756, </td>
+            <td>Not available</td>
+            <td>v3.1: 9.6</td>
+            <td>0.14</td>
+            <td>FortiCamera, FortiCamera, FortiNDR, FortiCamera, FortiNDR, FortiMail, FortiNDR, FortiNDR, FortiNDR, FortiMail, FortiVoice, FortiMail, FortiVoice, FortiNDR, FortiVoice, FortiRecorder, FortiRecorder, FortiNDR, FortiNDR, FortiNDR, FortiRecorder, FortiNDR, FortiMail</td>
+            <td>Fortinet</td>
+            <td>May 14, 2025, 10:20:22 PM</td>
+            <td>A stack-based buffer overflow vulnerability [CWE-121] in Fortinet FortiVoice versions 7.2.0, 7.0.0 through 7.0.6, 6.4.0 through 6.4.10, FortiRecorder versions 7.2.0 through 7.2.3, 7.0.0 through 7.0.5, 6.4.0 through 6.4.5, FortiMail versions 7.6.0 through 7.6.2, 7.4.0 through 7.4.4, 7.2.0 through 7.2.7, 7.0.0 through 7.0.8, FortiNDR versions 7.6.0, 7.4.0 through 7.4.7, 7.2.0 through 7.2.4, 7.0.0 through 7.0.6, FortiCamera versions 2.1.0 through 2.1.3, 2.0 all versions, 1.1 all versions, allows a remote unauthenticated attacker to execute arbitrary code or commands via sending HTTP requests with specially crafted hash cookie.</td>
+            <td>1.1.0 ≤1.1.5, 2.1.0 ≤2.1.3, 7.6.0, 2.0.0, 1.5.0 ≤1.5.3, 7.6.0 ≤7.6.2, 7.2.0 ≤7.2.4, 7.0.0 ≤7.0.6, 1.2.0, 7.2.0 ≤7.2.7, 6.4.0 ≤6.4.10, 7.4.0 ≤7.4.4, 7.2.0, 7.4.0 ≤7.4.7, 7.0.0 ≤7.0.6, 6.4.0 ≤6.4.5, 7.2.0 ≤7.2.3, 7.1.0 ≤7.1.1, 1.3.0 ≤1.3.1, 1.4.0, 7.0.0 ≤7.0.5, 1.1.0, 7.0.0 ≤7.0.8</td>
+            <td>May 13, 2025, 2:46:44 PM</td>
+            <td>May 14, 2025, 10:20:22 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-25-254, </td>
+        </tr>
+        
+        <tr class="low-risk">
+            <td>EUVD-2024-54503</td>
+            <td>CVE-2024-35281, </td>
+            <td>Not available</td>
+            <td>v3.1: 2.3</td>
+            <td>0.0</td>
+            <td>FortiClientMac, FortiClientMac, FortiVoiceUCDesktop, FortiClientMac</td>
+            <td>Fortinet</td>
+            <td>May 13, 2025, 3:17:58 PM</td>
+            <td>An improper isolation or compartmentalization vulnerability [CWE-653] in FortiClientMac version 7.4.2 and below, version 7.2.8 and below, 7.0 all versions and FortiVoiceUCDesktop 3.0 all versions desktop application may allow an authenticated attacker to inject code via Electron environment variables.</td>
+            <td>7.4.0 ≤7.4.2, 7.2.0 ≤7.2.8, 3.0.0 ≤3.0.16, 7.0.0 ≤7.0.14</td>
+            <td>May 13, 2025, 2:46:42 PM</td>
+            <td>May 13, 2025, 3:17:58 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-025, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-14956</td>
+            <td>CVE-2025-22859, </td>
+            <td>Not available</td>
+            <td>v3.1: 5.0</td>
+            <td>0.0</td>
+            <td>FortiClientEMS</td>
+            <td>Fortinet</td>
+            <td>May 13, 2025, 3:17:40 PM</td>
+            <td>A Relative Path Traversal vulnerability [CWE-23] in FortiClientEMS 7.4.0 through 7.4.1 and FortiClientEMS Cloud 7.4.0 through 7.4.1 may allow a remote unauthenticated attacker to perform a limited arbitrary file write on the system via upload requests.</td>
+            <td>7.4.0 ≤7.4.1</td>
+            <td>May 13, 2025, 2:46:42 PM</td>
+            <td>May 13, 2025, 3:17:40 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-552, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-20636</td>
+            <td>CVE-2024-23111, GSD-2024-23111, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.2</td>
+            <td>0.04</td>
+            <td>FortiProxy, FortiProxy, FortiOS, FortiOS, FortiProxy, FortiOS</td>
+            <td>Fortinet</td>
+            <td>May 1, 2025, 3:55:29 AM</td>
+            <td>An improper neutralization of input during web page Generation ('Cross-site Scripting') vulnerability [CWE-79] in FortiOS version 7.4.3 and below, 7.2 all versions, 7.0 all versions and FortiProxy version 7.4.2 and below, 7.2 all versions, 7.0 all versions reboot page may allow a remote privileged attacker with super-admin access to execute JavaScript code via crafted HTTP GET requests.</td>
+            <td>7.2.0 ≤7.2.8, 7.4.0 ≤7.4.2, 7.0.0 ≤7.0.13, 7.4.0 ≤7.4.2, 7.0.0 ≤7.0.14, 7.2.0 ≤7.2.6</td>
+            <td>Jun 11, 2024, 2:32:00 PM</td>
+            <td>May 1, 2025, 3:55:29 AM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-23-471, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-23306</td>
+            <td>CVE-2024-26010, GSD-2024-26010, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.7</td>
+            <td>0.07</td>
+            <td>FortiProxy, FortiOS, FortiSwitchManager, FortiOS, FortiPAM, FortiProxy, FortiOS, FortiOS, FortiProxy, FortiProxy, FortiOS, FortiSwitchManager, FortiProxy, FortiPAM, FortiOS, FortiProxy, FortiPAM, FortiProxy</td>
+            <td>Fortinet</td>
+            <td>May 1, 2025, 3:55:28 AM</td>
+            <td>A stack-based buffer overflow in Fortinet FortiPAM version 1.2.0, 1.1.0 through 1.1.2, 1.0.0 through 1.0.3, FortiWeb, FortiAuthenticator, FortiSwitchManager version 7.2.0 through 7.2.3, 7.0.1 through 7.0.3, FortiOS version 7.4.0 through 7.4.3, 7.2.0 through 7.2.7, 7.0.0 through 7.0.14, 6.4.0 through 6.4.15, 6.2.0 through 6.2.16, 6.0.0 through 6.0.18, FortiProxy version 7.4.0 through 7.4.2, 7.2.0 through 7.2.9, 7.0.0 through 7.0.15, 2.0.0 through 2.0.13, 1.2.0 through 1.2.13, 1.1.0 through 1.1.6, 1.0.0 through 1.0.7 allows attacker to execute unauthorized code or commands via specially crafted packets.</td>
+            <td>7.0.0 ≤7.0.15, 6.2.0 ≤6.2.16, 7.0.1 ≤7.0.3, 7.0.0 ≤7.0.14, 1.2.0, 1.0.0 ≤1.0.7, 6.0.0 ≤6.0.18, 7.4.0 ≤7.4.3, 1.1.0 ≤1.1.6, 7.2.0 ≤7.2.9, 6.4.0 ≤6.4.15, 7.2.0 ≤7.2.3, 1.2.0 ≤1.2.13, 1.1.0 ≤1.1.2, 7.2.0 ≤7.2.7, 7.4.0 ≤7.4.2, 1.0.0 ≤1.0.3, 2.0.0 ≤2.0.13</td>
+            <td>Jun 11, 2024, 2:32:03 PM</td>
+            <td>May 1, 2025, 3:55:28 AM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-036, </td>
+        </tr>
+        
+        <tr class="low-risk">
+            <td>EUVD-2024-19368</td>
+            <td>CVE-2024-21754, GSD-2024-21754, </td>
+            <td>Not available</td>
+            <td>v3.1: 1.7</td>
+            <td>0.36</td>
+            <td>FortiProxy, FortiOS, FortiProxy, FortiProxy, FortiOS, FortiOS, FortiOS, FortiProxy</td>
+            <td>Fortinet</td>
+            <td>May 1, 2025, 3:55:28 AM</td>
+            <td>A use of password hash with insufficient computational effort vulnerability [CWE-916] affecting FortiOS version 7.4.3 and below, 7.2 all versions, 7.0 all versions, 6.4 all versions and FortiProxy version 7.4.2 and below, 7.2 all versions, 7.0 all versions, 2.0 all versions may allow a privileged attacker with super-admin profile and CLI access to decrypting the backup file.</td>
+            <td>7.2.0 ≤7.2.10, 7.4.0 ≤7.4.3, 2.0.0 ≤2.0.14, 7.0.0 ≤7.0.17, 7.0.0 ≤7.0.15, 7.2.0 ≤7.2.8, 6.4.0 ≤6.4.15, 7.4.0 ≤7.4.2</td>
+            <td>Jun 11, 2024, 2:32:01 PM</td>
+            <td>May 1, 2025, 3:55:28 AM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-23-423, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2023-50904</td>
+            <td>CVE-2023-46720, GSD-2023-46720, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.3</td>
+            <td>0.03</td>
+            <td>FortiOS, FortiOS, FortiOS, FortiOS, FortiOS, FortiOS</td>
+            <td>Fortinet</td>
+            <td>May 1, 2025, 3:55:28 AM</td>
+            <td>A stack-based buffer overflow in Fortinet FortiOS version 7.4.0 through 7.4.1 and 7.2.0 through 7.2.7 and 7.0.0 through 7.0.12 and 6.4.6 through 6.4.15 and 6.2.9 through 6.2.16 and 6.0.13 through 6.0.18 allows attacker to execute unauthorized code or commands via specially crafted CLI commands.</td>
+            <td>7.2.0 ≤7.2.7, 6.2.9 ≤6.2.16, 7.0.0 ≤7.0.12, 6.0.13 ≤6.0.18, 7.4.0 ≤7.4.1, 6.4.6 ≤6.4.15</td>
+            <td>Jun 11, 2024, 2:32:00 PM</td>
+            <td>May 1, 2025, 3:55:28 AM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-23-356, </td>
+        </tr>
+        
+        <tr class="critical-risk">
+            <td>EUVD-2024-20633</td>
+            <td>CVE-2024-23108, GSD-2024-23108, </td>
+            <td>Not available</td>
+            <td>v3.1: 9.7</td>
+            <td>89.79</td>
+            <td>FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM</td>
+            <td>Fortinet</td>
+            <td>Apr 24, 2025, 3:54:48 PM</td>
+            <td>An improper neutralization of special elements used in an os command ('os command injection') in Fortinet FortiSIEM version 7.1.0 through 7.1.1 and 7.0.0 through 7.0.2 and 6.7.0 through 6.7.8 and 6.6.0 through 6.6.3 and 6.5.0 through 6.5.2 and 6.4.0 through 6.4.2 allows attacker to execute unauthorized code or commands via via crafted API requests.</td>
+            <td>6.7.0 ≤6.7.8, 6.6.0 ≤6.6.3, 7.0.0 ≤7.0.2, 7.1.0 ≤7.1.1, 6.5.0 ≤6.5.2</td>
+            <td>Feb 5, 2024, 1:26:15 PM</td>
+            <td>Apr 24, 2025, 3:54:48 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-130, </td>
+        </tr>
+        
+        <tr class="critical-risk">
+            <td>EUVD-2024-19376</td>
+            <td>CVE-2024-21762, GSD-2024-21762, </td>
+            <td>Not available</td>
+            <td>v3.1: 9.6</td>
+            <td>92.23</td>
+            <td>FortiOS, FortiOS, FortiProxy, FortiProxy, FortiOS, FortiOS, FortiProxy, FortiProxy, FortiOS, FortiProxy, FortiProxy, FortiOS, FortiProxy, FortiOS, FortiProxy</td>
+            <td>Fortinet</td>
+            <td>Apr 24, 2025, 3:49:22 PM</td>
+            <td>A out-of-bounds write in Fortinet FortiOS versions 7.4.0 through 7.4.2, 7.2.0 through 7.2.6, 7.0.0 through 7.0.13, 6.4.0 through 6.4.14, 6.2.0 through 6.2.15, 6.0.0 through 6.0.17, FortiProxy versions 7.4.0 through 7.4.2, 7.2.0 through 7.2.8, 7.0.0 through 7.0.14, 2.0.0 through 2.0.13, 1.2.0 through 1.2.13, 1.1.0 through 1.1.6, 1.0.0 through 1.0.7 allows attacker to execute unauthorized code or commands via specifically crafted requests</td>
+            <td>7.2.0 ≤7.2.6, 6.2.0 ≤6.2.15, 7.0.0 ≤7.0.14, 1.1.0 ≤1.1.6, 7.0.0 ≤7.0.13, 1.0.0 ≤1.0.7, 6.4.0 ≤6.4.14, 7.2.0 ≤7.2.8, 7.4.0 ≤7.4.2, 7.4.0 ≤7.4.2, 1.2.0 ≤1.2.13, 6.0.0 ≤6.0.17, 2.0.0 ≤2.0.13</td>
+            <td>Feb 9, 2024, 8:14:25 AM</td>
+            <td>Apr 24, 2025, 3:49:22 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-24-015, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2023-41785</td>
+            <td>CVE-2023-37932, GSD-2023-37932, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.2</td>
+            <td>0.48</td>
+            <td>FortiVoice, FortiVoice, FortiVoice</td>
+            <td>Fortinet</td>
+            <td>Apr 17, 2025, 3:45:35 PM</td>
+            <td>An improper limitation of a pathname to a restricted directory ('path traversal') vulnerability [CWE-22] in FortiVoiceEntreprise version 7.0.0 and before 6.4.7 allows an authenticated attacker to read arbitrary files from the system via sending crafted HTTP or HTTPS requests</td>
+            <td>6.0.0 ≤6.0.12, 6.4.0 ≤6.4.7, 7.0.0</td>
+            <td>Jan 10, 2024, 5:48:00 PM</td>
+            <td>Apr 17, 2025, 3:45:35 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-219, </td>
+        </tr>
+        
+        <tr class="critical-risk">
+            <td>EUVD-2025-10266</td>
+            <td>CVE-2024-48887, GHSA-w84w-59g8-pmg9, </td>
+            <td>Not available</td>
+            <td>v3.1: 9.3</td>
+            <td>0.08</td>
+            <td>FortiSwitch, FortiSwitch, FortiSwitch, FortiSwitch, FortiSwitch</td>
+            <td>Fortinet</td>
+            <td>Apr 8, 2025, 5:49:20 PM</td>
+            <td>A  unverified password change vulnerability in Fortinet FortiSwitch GUI may allow a remote unauthenticated attacker to change admin passwords via a specially crafted request</td>
+            <td>7.2.0 ≤7.2.8, 7.0.0 ≤7.0.10, 7.4.0 ≤7.4.4, 6.4.0 ≤6.4.14, 7.6.0</td>
+            <td>Apr 8, 2025, 4:52:02 PM</td>
+            <td>Apr 8, 2025, 5:49:20 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-48887, https://fortiguard.fortinet.com/psirt/FG-IR-24-435, </td>
+        </tr>
+        
+        <tr class="low-risk">
+            <td>EUVD-2025-10301</td>
+            <td>CVE-2025-22855, GHSA-962v-6x3f-5mw4, </td>
+            <td>Not available</td>
+            <td>v3.1: 2.6</td>
+            <td>0.04</td>
+            <td>FortiClientEMS, FortiClientEMS</td>
+            <td>Fortinet</td>
+            <td>Apr 8, 2025, 2:47:47 PM</td>
+            <td>An improper neutralization of input during web page generation ('Cross-site Scripting') [CWE-79] vulnerability in Fortinet FortiClient before 7.4.1 may allow the EMS administrator to send messages containing javascript code.</td>
+            <td>7.2.1 ≤7.2.8, 7.4.0 ≤7.4.1</td>
+            <td>Apr 8, 2025, 2:02:44 PM</td>
+            <td>Apr 8, 2025, 2:47:47 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2025-22855, https://fortiguard.fortinet.com/psirt/FG-IR-23-344, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-10300</td>
+            <td>CVE-2025-25254, GHSA-q7jr-v677-ww76, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.8</td>
+            <td>0.08</td>
+            <td>FortiWeb, FortiWeb, FortiWeb, FortiWeb</td>
+            <td>Fortinet</td>
+            <td>Apr 8, 2025, 2:44:39 PM</td>
+            <td>An Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability [CWE-22] in FortiWeb version 7.6.2 and below, version 7.4.6 and below, 7.2 all versions, 7.0 all versions endpoint may allow an authenticated admin to access and modify the filesystem via crafted requests.</td>
+            <td>7.6.0 ≤7.6.2, 7.4.0 ≤7.4.6, 7.2.0 ≤7.2.11, 7.0.0 ≤7.0.11</td>
+            <td>Apr 8, 2025, 2:02:44 PM</td>
+            <td>Apr 8, 2025, 2:44:39 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2025-25254, https://fortiguard.fortinet.com/psirt/FG-IR-24-474, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-10304</td>
+            <td>CVE-2024-54025, GHSA-jr95-cvrj-r656, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.5</td>
+            <td>0.06</td>
+            <td>FortiIsolator</td>
+            <td>Fortinet</td>
+            <td>Apr 8, 2025, 2:41:17 PM</td>
+            <td>An improper neutralization of special elements used in an OS command ('OS Command Injection') vulnerability [CWE-78] in Fortinet FortiIsolator CLI before version 2.4.6 allows a privileged attacker to execute unauthorized code or commands via crafted CLI requests.</td>
+            <td>2.4.3 ≤2.4.6</td>
+            <td>Apr 8, 2025, 2:02:45 PM</td>
+            <td>Apr 8, 2025, 2:41:17 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-54025, https://fortiguard.fortinet.com/psirt/FG-IR-24-392, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2025-10308</td>
+            <td>CVE-2024-54024, GHSA-83g9-r3gv-pq9c, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.0</td>
+            <td>0.32</td>
+            <td>FortiIsolator</td>
+            <td>Fortinet</td>
+            <td>Apr 8, 2025, 2:37:57 PM</td>
+            <td>An improper neutralization of special elements used in an OS command ('OS Command Injection') vulnerability [CWE-78] in Fortinet FortiIsolator before version 2.4.6 allows a privileged attacker with super-admin profile and CLI access to execute unauthorized code via specifically crafted HTTP requests.</td>
+            <td>2.4.3 ≤2.4.6</td>
+            <td>Apr 8, 2025, 2:02:45 PM</td>
+            <td>Apr 8, 2025, 2:37:57 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-54024, https://fortiguard.fortinet.com/psirt/FG-IR-24-397, </td>
+        </tr>
+        
+        <tr class="low-risk">
+            <td>EUVD-2024-29943</td>
+            <td>CVE-2024-32122, GSD-2024-32122, </td>
+            <td>Not available</td>
+            <td>v3.1: 2.1</td>
+            <td>0.02</td>
+            <td>FortiOS, FortiOS, FortiOS, FortiOS</td>
+            <td>Fortinet</td>
+            <td>Apr 8, 2025, 2:32:01 PM</td>
+            <td>A storing passwords in a recoverable format in Fortinet FortiOS versions 7.2.0 through 7.2.1 allows attacker to information disclosure via modification of LDAP server IP to point to a malicious server.</td>
+            <td>6.4.0 ≤6.4.16, 7.4.0 ≤7.4.7, 7.2.0 ≤7.2.11, 7.0.0 ≤7.0.17</td>
+            <td>Apr 8, 2025, 2:02:57 PM</td>
+            <td>Apr 8, 2025, 2:32:01 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-32122, https://fortiguard.fortinet.com/psirt/FG-IR-24-111, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-10307</td>
+            <td>CVE-2024-46671, GHSA-cwrm-9wh5-jq4m, </td>
+            <td>Not available</td>
+            <td>v3.1: 5.6</td>
+            <td>0.05</td>
+            <td>FortiWeb, FortiWeb, FortiWeb, FortiWeb</td>
+            <td>Fortinet</td>
+            <td>Apr 8, 2025, 2:30:24 PM</td>
+            <td>An Incorrect User Management vulnerability [CWE-286] in FortiWeb version 7.6.2 and below, version 7.4.6 and below, version 7.2.10 and below, version 7.0.11 and below widgets dashboard may allow an authenticated attacker with at least read-only admin permission to perform operations on the dashboard of other administrators via crafted requests.</td>
+            <td>7.2.0 ≤7.2.10, 7.0.0 ≤7.0.11, 7.4.0 ≤7.4.6, 7.6.0 ≤7.6.2</td>
+            <td>Apr 8, 2025, 2:02:59 PM</td>
+            <td>Apr 8, 2025, 2:30:24 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-46671, https://fortiguard.fortinet.com/psirt/FG-IR-24-184, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-10306</td>
+            <td>CVE-2024-52962, GHSA-j27p-5p5f-gjjv, </td>
+            <td>Not available</td>
+            <td>v3.1: 5.0</td>
+            <td>0.05</td>
+            <td>FortiManager, FortiManager, FortiManager, FortiAnalyzer, FortiManager, FortiAnalyzer, FortiAnalyzer, FortiAnalyzer</td>
+            <td>Fortinet</td>
+            <td>Apr 8, 2025, 2:27:48 PM</td>
+            <td>An Improper Output Neutralization for Logs vulnerability [CWE-117] in FortiAnalyzer version 7.6.1 and below, version 7.4.5 and below, version 7.2.8 and below, version 7.0.13 and below and FortiManager version 7.6.1 and below, version 7.4.5 and below, version 7.2.8 and below, version 7.0.12 and below may allow an unauthenticated remote attacker to pollute the logs via crafted login requests.</td>
+            <td>7.0.0 ≤7.0.13, 7.6.0 ≤7.6.1, 7.2.0 ≤7.2.8, 7.2.0 ≤7.2.8, 7.4.0 ≤7.4.5, 7.0.0 ≤7.0.13, 7.4.0 ≤7.4.5, 7.6.0 ≤7.6.1</td>
+            <td>Apr 8, 2025, 2:03:34 PM</td>
+            <td>Apr 8, 2025, 2:27:48 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-52962, https://fortiguard.fortinet.com/psirt/FG-IR-24-453, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2023-41783</td>
+            <td>CVE-2023-37930, GSD-2023-37930, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.7</td>
+            <td>0.11</td>
+            <td>FortiProxy, FortiProxy, FortiOS, FortiOS, FortiOS, FortiOS</td>
+            <td>Fortinet</td>
+            <td>Apr 8, 2025, 2:27:09 PM</td>
+            <td>Multiple issues including the use of uninitialized ressources [CWE-908] and excessive iteration [CWE-834] vulnerabilities in Fortinet FortiOS SSL VPN webmode version 7.4.0, version 7.2.0 through 7.2.5, version 7.0.1 through 7.0.11 and version 6.4.7 through 6.4.14 and Fortinet FortiProxy SSL VPN webmode version 7.2.0 through 7.2.6 and version 7.0.0 through 7.0.12 allows a VPN user to corrupt memory potentially leading to code or commands execution via specifically crafted requests.</td>
+            <td>7.2.0 ≤7.2.6, 7.0.0 ≤7.0.12, 6.4.7 ≤6.4.14, 7.4.0, 7.0.1 ≤7.0.11, 7.2.0 ≤7.2.5</td>
+            <td>Apr 8, 2025, 2:03:38 PM</td>
+            <td>Apr 8, 2025, 2:27:09 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2023-37930, https://fortiguard.com/psirt/FG-IR-23-165, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2024-23309</td>
+            <td>CVE-2024-26013, GSD-2024-26013, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.1</td>
+            <td>0.06</td>
+            <td>FortiManager, FortiManager, FortiOS, FortiProxy, FortiManager, FortiProxy, FortiOS, FortiManager, FortiManager, FortiOS, FortiProxy, FortiProxy, FortiOS, FortiOS</td>
+            <td>Fortinet</td>
+            <td>Apr 8, 2025, 2:24:44 PM</td>
+            <td>A improper restriction of communication channel to intended endpoints vulnerability [CWE-923] in Fortinet FortiOS version 7.4.0 through 7.4.4, 7.2.0 through 7.2.8, 7.0.0 through 7.0.15, 6.4.0 through 6.4.15 and before 6.2.16, Fortinet FortiProxy version 7.4.0 through 7.4.2, 7.2.0 through 7.2.9 and before 7.0.15, Fortinet FortiManager version 7.4.0 through 7.4.2, 7.2.0 through 7.2.4, 7.0.0 through 7.0.11, 6.4.0 through 6.4.14 and before 6.2.13, Fortinet FortiAnalyzer version 7.4.0 through 7.4.2, 7.2.0 through 7.2.4, 7.0.0 through 7.0.11, 6.4.0 through 6.4.14 and before 6.2.13, Fortinet FortiVoice version 7.0.0 through 7.0.2 before 6.4.8 and Fortinet FortiWeb before 7.4.2 may allow an unauthenticated attacker in a man-in-the-middle position to impersonate the management device (FortiCloud server or/and in certain conditions, FortiManager), via intercepting the FGFM authentication request between the management device and the managed device</td>
+            <td>6.4.0 ≤6.4.14, 7.0.0 ≤7.0.11, 6.2.0 ≤6.2.16, 7.4.0 ≤7.4.2, 6.2.0 ≤6.2.13, 7.2.0 ≤7.2.9, 6.4.0 ≤6.4.15, 7.4.0 ≤7.4.2, 7.2.0 ≤7.2.4, 7.0.0 ≤7.0.14, 2.0.0 ≤2.0.14, 7.0.0 ≤7.0.15, 7.4.0 ≤7.4.3, 7.2.0 ≤7.2.7</td>
+            <td>Apr 8, 2025, 2:03:49 PM</td>
+            <td>Apr 8, 2025, 2:24:44 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-26013, https://fortiguard.fortinet.com/psirt/FG-IR-24-046, </td>
+        </tr>
+        
+        <tr class="low-risk">
+            <td>EUVD-2025-10305</td>
+            <td>CVE-2024-50565, GHSA-j94p-gv3v-cg5q, </td>
+            <td>Not available</td>
+            <td>v3.1: 3.0</td>
+            <td>0.07</td>
+            <td>FortiAnalyzer, FortiWeb, FortiOS, FortiVoice, FortiAnalyzer, FortiAnalyzer, FortiWeb, FortiOS, FortiVoice, FortiOS, FortiWeb, FortiAnalyzer, FortiVoice, FortiOS, FortiAnalyzer, FortiOS</td>
+            <td>Fortinet</td>
+            <td>Apr 8, 2025, 2:22:56 PM</td>
+            <td>A improper restriction of communication channel to intended endpoints vulnerability [CWE-923] in Fortinet FortiOS version 7.4.0 through 7.4.3, 7.2.0 through 7.2.7, 7.0.0 through 7.0.14, 6.4.0 through 6.4.15 and 6.2.0 through 6.2.16, Fortinet FortiProxy version 7.4.0 through 7.4.2, 7.2.0 through 7.2.9, 7.0.0 through 7.0.15 and 2.0.0 through 2.0.14, Fortinet FortiManager version 7.4.0 through 7.4.2, 7.2.0 through 7.2.4, 7.0.0 through 7.0.11, 6.4.0 through 6.4.14 and 6.2.0 through 6.2.13, Fortinet FortiAnalyzer version 7.4.0 through 7.4.2, 7.2.0 through 7.2.4, 7.0.0 through 7.0.11, 6.4.0 through 6.4.14 and 6.2.0 through 6.2.13, Fortinet FortiVoice version 7.0.0 through 7.0.2, 6.4.0 through 6.4.8 and 6.0.0 through 6.0.12 and Fortinet FortiWeb version 7.4.0 through 7.4.2, 7.2.0 through 7.2.10, 7.0.0 through 7.0.10 allows an unauthenticated attacker in a man-in-the-middle position to impersonate the management device (FortiCloud server or/and in certain conditions, FortiManager), via intercepting the FGFM authentication request between the management device and the managed device</td>
+            <td>6.4.0 ≤6.4.14, 7.2.0 ≤7.2.11, 7.2.0 ≤7.2.8, 7.0.0 ≤7.0.2, 7.2.0 ≤7.2.4, 7.4.0 ≤7.4.2, 7.0.0 ≤7.0.11, 7.0.0 ≤7.0.15, 6.4.0 ≤6.4.8, 6.4.0 ≤6.4.16, 7.4.0 ≤7.4.2, 7.0.0 ≤7.0.11, 6.0.0 ≤6.0.12, 6.2.0 ≤6.2.16, 6.2.0 ≤6.2.13, 7.4.0 ≤7.4.4</td>
+            <td>Apr 8, 2025, 2:03:51 PM</td>
+            <td>Apr 8, 2025, 2:22:56 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-50565, https://fortiguard.fortinet.com/psirt/FG-IR-24-046, </td>
+        </tr>
+        
+        <tr class="critical-risk">
+            <td>EUVD-2023-45268</td>
+            <td>CVE-2023-40714, GSD-2023-40714, </td>
+            <td>Not available</td>
+            <td>v3.1: 9.7</td>
+            <td>0.35</td>
+            <td>FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM</td>
+            <td>Fortinet</td>
+            <td>Apr 2, 2025, 4:16:37 PM</td>
+            <td>A relative path traversal in Fortinet FortiSIEM versions 7.0.0, 6.7.0 through 6.7.2, 6.6.0 through 6.6.3, 6.5.1, 6.5.0 allows attacker to escalate privilege via uploading certain GUI elements</td>
+            <td>6.7.0 ≤6.7.2, 6.6.0 ≤6.6.3, 6.5.0 ≤6.5.1, 7.0.0</td>
+            <td>Apr 2, 2025, 8:06:48 AM</td>
+            <td>Apr 2, 2025, 4:16:37 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-085, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2021-12926</td>
+            <td>CVE-2021-26105, GSD-2021-26105, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.4</td>
+            <td>0.0</td>
+            <td>FortiSandbox, FortiSandbox</td>
+            <td>Fortinet</td>
+            <td>Mar 31, 2025, 6:19:39 PM</td>
+            <td>A stack-based buffer overflow vulnerability (CWE-121) in the profile parser of FortiSandbox version 3.2.2 and below, version 3.1.4 and below may allow an authenticated attacker to potentially execute unauthorized code or commands via specifically crafted HTTP requests.</td>
+            <td>3.1.4, 3.2.2</td>
+            <td>Mar 24, 2025, 3:27:56 PM</td>
+            <td>Mar 31, 2025, 6:19:39 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2021-26105, https://fortiguard.fortinet.com/psirt/FG-IR-20-234, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2023-37465</td>
+            <td>CVE-2023-33302, GSD-2023-33302, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.5</td>
+            <td>0.09</td>
+            <td>FortiMail, FortiMail, FortiMail, FortiMail, FortiNDR, FortiMail, FortiNDR, FortiNDR, FortiMail, FortiNDR, FortiNDR, FortiMail, FortiNDR, FortiNDR, FortiNDR, FortiMail, FortiMail</td>
+            <td>Fortinet</td>
+            <td>Mar 31, 2025, 3:30:12 PM</td>
+            <td>A buffer copy without checking size of input ('classic buffer overflow') in Fortinet  FortiMail webmail and administrative interface version 6.4.0 through 6.4.4 and before 6.2.6 and FortiNDR administrative interface version 7.2.0 and before 7.1.0 allows an authenticated attacker with regular webmail access to trigger a buffer overflow and to possibly execute unauthorized code or commands via specifically crafted HTTP requests.</td>
+            <td>5.2.0 ≤5.2.10, 6.2.0 ≤6.2.6, 5.0.0 ≤5.0.11, 6.0.0 ≤6.0.10, 1.4.0, 5.4.0 ≤5.4.12, 1.5.0 ≤1.5.3, 1.1.0, 5.3.0 ≤5.3.10, 7.0.0 ≤7.0.6, 7.1.0, 5.3.12 ≤5.3.13, 1.2.0, 7.2.0, 1.3.0 ≤1.3.1, 5.1.0 ≤5.1.7, 6.4.0 ≤6.4.4</td>
+            <td>Mar 31, 2025, 2:58:11 PM</td>
+            <td>Mar 31, 2025, 3:30:12 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2023-33302, https://fortiguard.fortinet.com/psirt/FG-IR-21-023, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-8613</td>
+            <td>CVE-2019-16149, GHSA-j8c2-6298-q92j, </td>
+            <td>Not available</td>
+            <td>v3.1: 5.4</td>
+            <td>0.0</td>
+            <td>FortiClientEMS</td>
+            <td>Fortinet</td>
+            <td>Mar 28, 2025, 2:30:50 PM</td>
+            <td>An Improper Neutralization of Input During Web Page Generation in FortiClientEMS version 6.2.0 may allow a remote attacker to execute unauthorized code by injecting malicious payload in the user profile of a FortiClient instance being managed by the vulnerable system.</td>
+            <td>6.2.0</td>
+            <td>Mar 28, 2025, 9:07:30 AM</td>
+            <td>Mar 28, 2025, 2:30:50 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2019-16149, https://fortiguard.fortinet.com/psirt/FG-IR-19-072, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2021-10928</td>
+            <td>CVE-2021-24008, GSD-2021-24008, </td>
+            <td>Not available</td>
+            <td>v3.1: 5.0</td>
+            <td>0.08</td>
+            <td>FortiDDoS, FortiDDoS-CM, FortiDDoS, FortiDDoS, FortiDDoS-CM, FortiDDoS, FortiDDoS-CM, FortiDDoS-CM, FortiNDR, FortiDDoS, FortiNDR, FortiNDR, FortiDDoS-CM, FortiDDoS, FortiDDoS, FortiDDoS, FortiDDoS, FortiNDR, FortiNDR</td>
+            <td>Fortinet</td>
+            <td>Mar 28, 2025, 1:39:11 PM</td>
+            <td>An exposure of sensitive system information to an unauthorized control sphere vulnerability [CWE-497] in FortiDDoS version 5.4.0, version 5.3.2 and below, version 5.2.0, version 5.1.0, version 5.0.0, version 4.7.0, version 4.6.0, version 4.5.0, version 4.4.2 and below, FortiDDoS-CM version 5.3.0, version 5.2.0, version 5.1.0, version 5.0.0, version 4.7.0, FortiVoice version 6.0.6 and below, FortiRecorder version 6.0.3 and below and FortiMail version 6.4.1 and below, version 6.2.4 and below, version 6.0.9 and below may allow a remote, unauthenticated attacker to obtain potentially sensitive software-version information by reading a JavaScript file.</td>
+            <td>5.4.0, 5.0.0, 5.2.0, 4.7.0, 5.3.0, 4.6.0, 4.7.0, 5.1.0, 1.5.0 ≤1.5.3, 4.4.0 ≤4.4.2, 1.4.0, 1.1.0, 5.2.0, 5.0.0, 5.3.0 ≤5.3.2, 4.5.0, 5.1.0, 1.3.0 ≤1.3.1, 1.2.0</td>
+            <td>Mar 28, 2025, 10:13:32 AM</td>
+            <td>Mar 28, 2025, 1:39:11 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-20-105, https://nvd.nist.gov/vuln/detail/CVE-2021-24008, </td>
+        </tr>
+        
+        <tr class="critical-risk">
+            <td>EUVD-2023-29551</td>
+            <td>CVE-2023-25610, GSD-2023-25610, </td>
+            <td>Not available</td>
+            <td>v3.1: 9.3</td>
+            <td>9.77</td>
+            <td>FortiOS, FortiOS, FortiOS-6K7K, FortiOS, FortiProxy, FortiProxy, FortiOS-6K7K, FortiAnalyzer, FortiOS, FortiManager, FortiWeb, FortiAnalyzer, FortiAnalyzer, FortiWeb, FortiOS-6K7K, FortiOS-6K7K, FortiProxy, FortiWeb, FortiManager, FortiManager, FortiWeb, FortiOS-6K7K, FortiOS, FortiWeb, FortiProxy, FortiManager, FortiOS-6K7K, FortiManager, FortiWeb, FortiOS, FortiOS-6K7K, FortiOS-6K7K, FortiOS-6K7K, FortiSwitchManager, FortiOS, FortiAnalyzer, FortiProxy, FortiAnalyzer, FortiOS, FortiOS, FortiOS-6K7K, FortiSwitchManager</td>
+            <td>Fortinet</td>
+            <td>Mar 24, 2025, 6:42:44 PM</td>
+            <td>A buffer underwrite ('buffer underflow') vulnerability in the administrative interface of Fortinet FortiOS version 7.2.0 through 7.2.3, version 7.0.0 through 7.0.6, version 6.4.0 through 6.4.11 and version 6.2.12 and below, FortiProxy version 7.2.0 through 7.2.2, version 7.0.0 through 7.0.8, version 2.0.12 and below and FortiOS-6K7K version 7.0.5, version 6.4.0 through 6.4.10 and version 6.2.0 through 6.2.10 and below allows a remote unauthenticated attacker to execute arbitrary code or commands via specifically crafted requests.</td>
+            <td>6.0.0 ≤6.0.18, 5.2.0 ≤5.2.15, 7.0.5, 6.4.0 ≤6.4.11, 7.0.0 ≤7.0.8, 2.0.0 ≤2.0.14, 6.0.12 ≤6.0.18, 6.0.0 ≤6.0.11, 5.0.0 ≤5.0.14, 6.0.0 ≤6.0.11, 6.2.0 ≤6.2.7, 7.0.0 ≤7.0.4, 6.4.0 ≤6.4.11, 6.4.0 ≤6.4.2, 6.4.10, 6.2.6 ≤6.2.7, 1.2.0 ≤1.2.13, 7.2.0 ≤7.2.1, 7.0.0 ≤7.0.4, 6.4.0 ≤6.4.11, 6.1.0 ≤6.1.3, 6.4.8, 5.4.0 ≤5.4.13, 7.0.0 ≤7.0.6, 7.2.0 ≤7.2.2, 7.2.0, 6.4.6, 6.2.0 ≤6.2.10, 6.3.0 ≤6.3.22, 6.2.0 ≤6.2.12, 6.0.10, 6.2.9 ≤6.2.12, 6.2.4, 7.2.0 ≤7.2.1, 7.2.0 ≤7.2.3, 7.2.0, 1.1.0 ≤1.1.6, 6.2.0 ≤6.2.10, 7.0.0 ≤7.0.9, 5.6.0 ≤5.6.14, 6.4.2, 7.0.0 ≤7.0.1</td>
+            <td>Mar 24, 2025, 3:39:48 PM</td>
+            <td>Mar 24, 2025, 6:42:44 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-001, https://nvd.nist.gov/vuln/detail/CVE-2023-25610, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2021-12912</td>
+            <td>CVE-2021-26091, GSD-2021-26091, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.9</td>
+            <td>0.04</td>
+            <td>FortiMail, FortiMail, FortiMail</td>
+            <td>Fortinet</td>
+            <td>Mar 24, 2025, 6:31:01 PM</td>
+            <td>A use of a cryptographically weak pseudo-random number generator vulnerability in the authenticator of the Identity Based Encryption service of FortiMail 6.4.0 through 6.4.4, and 6.2.0 through 6.2.7 may allow an unauthenticated attacker to infer parts of users authentication tokens and reset their credentials.</td>
+            <td>6.4.0 ≤6.4.4, 6.2.0 ≤6.2.9, 6.2.0 <6.2.*</td>
+            <td>Mar 24, 2025, 6:31:01 PM</td>
+            <td>Mar 24, 2025, 6:31:01 PM</td>
+            <td>https://fortiguard.com/advisory/FG-IR-21-031, https://nvd.nist.gov/vuln/detail/CVE-2021-26091, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2018-20790</td>
+            <td>CVE-2018-9193, GSD-2018-9193, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.1</td>
+            <td>0.06</td>
+            <td>FortiClientWindows, FortiClientWindows, Fortinet FortiClient for Windows</td>
+            <td>Fortinet</td>
+            <td>Mar 24, 2025, 6:30:31 PM</td>
+            <td>A researcher has disclosed several vulnerabilities against FortiClient for Windows version 6.0.5 and below, version 5.6.6, the combination of these vulnerabilities can turn into an exploit chain, which allows a user to gain system privileges on Microsoft Windows.</td>
+            <td>5.6.6, 6.0.0 ≤6.0.5, 6.0.4 and earlier</td>
+            <td>May 24, 2022, 4:46:54 PM</td>
+            <td>Mar 24, 2025, 6:30:31 PM</td>
+            <td>https://fortiguard.com/advisory/FG-IR-18-108, https://nvd.nist.gov/vuln/detail/CVE-2018-9193, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-7234</td>
+            <td>CVE-2019-16151, GHSA-c55x-8r3h-3586, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.7</td>
+            <td>0.02</td>
+            <td>FortiOS, FortiOS</td>
+            <td>Fortinet</td>
+            <td>Mar 21, 2025, 4:22:17 PM</td>
+            <td>An improper neutralization of input during web page generation vulnerability [CWE-79] in FortiOS 6.4.1 and below, 6.2.9 and below may allow a remote unauthenticated attacker to either redirect users to malicious websites via a crafted "Host" header or to execute JavaScript code in the victim's browser context.
+This happens when the FortiGate has web filtering and category override enabled/configured.</td>
+            <td>6.4.0 ≤6.4.1, 6.2.0 ≤6.2.9</td>
+            <td>Mar 21, 2025, 4:02:01 PM</td>
+            <td>Mar 21, 2025, 4:22:17 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2019-16151, https://fortiguard.com/advisory/FG-IR-19-301, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2025-3725</td>
+            <td>CVE-2025-24472, </td>
+            <td>Not available</td>
+            <td>v3.1: 8.1</td>
+            <td>8.63</td>
+            <td>FortiProxy, FortiOS, FortiProxy</td>
+            <td>Fortinet</td>
+            <td>Mar 19, 2025, 9:30:44 PM</td>
+            <td>An Authentication Bypass Using an Alternate Path or Channel vulnerability [CWE-288] affecting FortiOS 7.0.0 through 7.0.16 and FortiProxy 7.2.0 through 7.2.12, 7.0.0 through 7.0.19 may allow a remote attacker to gain super-admin privileges via crafted CSF proxy requests.</td>
+            <td>7.2.0 ≤7.2.12, 7.0.0 ≤7.0.16, 7.0.0 ≤7.0.19</td>
+            <td>Feb 11, 2025, 6:31:36 PM</td>
+            <td>Mar 19, 2025, 9:30:44 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-535, https://nvd.nist.gov/vuln/detail/CVE-2025-24472, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2024-42864</td>
+            <td>CVE-2024-47571, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.9</td>
+            <td>0.3</td>
+            <td>FortiManager, FortiManager, FortiManager, FortiManager</td>
+            <td>Fortinet</td>
+            <td>Mar 19, 2025, 6:30:48 PM</td>
+            <td>An operation on a resource after expiration or release in Fortinet FortiManager 6.4.12 through 7.4.0 allows an attacker to gain improper access to FortiGate via valid credentials.</td>
+            <td>7.0.7 ≤7.0.8, 7.2.3, 7.4.0, 6.4.12</td>
+            <td>Jan 14, 2025, 3:30:54 PM</td>
+            <td>Mar 19, 2025, 6:30:48 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-239, https://nvd.nist.gov/vuln/detail/CVE-2024-47571, </td>
+        </tr>
+        
+        <tr class="critical-risk">
+            <td>EUVD-2023-51650</td>
+            <td>CVE-2023-47539, GSD-2023-47539, </td>
+            <td>Not available</td>
+            <td>v3.1: 9.0</td>
+            <td>0.08</td>
+            <td>FortiMail</td>
+            <td>Fortinet</td>
+            <td>Mar 19, 2025, 3:55:48 AM</td>
+            <td>An improper access control vulnerability in FortiMail version 7.4.0 configured with RADIUS authentication and remote_wildcard enabled may allow a remote unauthenticated attacker to bypass admin login via a crafted HTTP request.</td>
+            <td>7.4.0</td>
+            <td>Mar 18, 2025, 1:56:56 PM</td>
+            <td>Mar 19, 2025, 3:55:48 AM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-439, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2024-19374</td>
+            <td>CVE-2024-21760, GSD-2024-21760, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.7</td>
+            <td>0.03</td>
+            <td>FortiSOAR, FortiSOAR, FortiSOAR, FortiSOAR, FortiSOAR, FortiSOAR</td>
+            <td>Fortinet</td>
+            <td>Mar 18, 2025, 2:15:03 PM</td>
+            <td>An improper control of generation of code ('Code Injection') vulnerability [CWE-94] in FortiSOAR Connector FortiSOAR 7.4 all versions, 7.3 all versions, 7.2 all versions, 7.0 all versions, 6.4 all versions may allow an authenticated attacker to execute arbitrary code on the host via a playbook code snippet.</td>
+            <td>7.3.0 ≤7.3.3, 7.2.0 ≤7.2.2, 7.4.0 ≤7.4.5, 7.0.0 ≤7.0.3, 6.4.0 ≤6.4.1, 6.4.3 ≤6.4.4</td>
+            <td>Mar 18, 2025, 1:56:44 PM</td>
+            <td>Mar 18, 2025, 2:15:03 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-23-420, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2021-9282</td>
+            <td>CVE-2021-22126, GSD-2021-22126, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.5</td>
+            <td>0.02</td>
+            <td>FortiWLC, FortiWLC, FortiWLC, FortiWLC, FortiWLC</td>
+            <td>Fortinet</td>
+            <td>Mar 18, 2025, 3:55:16 AM</td>
+            <td>A use of hard-coded password vulnerability in FortiWLC version 8.5.2 and below, version 8.4.8 and below, version 8.3.3 to 8.3.2, version 8.2.7 to 8.2.6 may allow a local, authenticated attacker to connect to the managed Access Point (Meru AP and FortiAP-U) as root using the default hard-coded username and password.</td>
+            <td>8.4.0 ≤8.4.2, 8.4.4 ≤8.4.8, 8.3.2 ≤8.3.3, 8.5.0 ≤8.5.2, 8.2.6 ≤8.2.7</td>
+            <td>Mar 17, 2025, 1:05:55 PM</td>
+            <td>Mar 18, 2025, 3:55:16 AM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2021-22126, https://fortiguard.fortinet.com/psirt/FG-IR-20-147, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2025-6585</td>
+            <td>CVE-2024-54027, GHSA-qcqx-4h2x-x43j, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.8</td>
+            <td>0.02</td>
+            <td>FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox</td>
+            <td>Fortinet</td>
+            <td>Mar 18, 2025, 3:55:15 AM</td>
+            <td>A Use of Hard-coded Cryptographic Key vulnerability [CWE-321] in FortiSandbox version 4.4.6 and below, version 4.2.7 and below, version 4.0.5 and below, version 3.2.4 and below, version 3.1.5 and below, version 3.0.7 to 3.0.5 may allow a privileged attacker with super-admin profile and CLI access to read sensitive data via CLI.</td>
+            <td>3.1.0 ≤3.1.5, 3.2.0 ≤3.2.4, 4.0.0 ≤4.0.5, 4.4.0 ≤4.4.6, 3.0.5 ≤3.0.7, 4.2.0 ≤4.2.7, 5.0.0</td>
+            <td>Mar 17, 2025, 1:05:31 PM</td>
+            <td>Mar 18, 2025, 3:55:15 AM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-54027, https://fortiguard.fortinet.com/psirt/FG-IR-24-327, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2020-30121</td>
+            <td>CVE-2020-9295, GSD-2020-9295, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.7</td>
+            <td>0.02</td>
+            <td>FortiClientWindows, FortiClientWindows</td>
+            <td>Fortinet</td>
+            <td>Mar 17, 2025, 5:57:18 PM</td>
+            <td>FortiOS 6.2 running AV engine version 6.00142 and below, FortiOS 6.4 running AV engine version 6.00144 and below and FortiClient 6.2 running AV engine version 6.00137 and below may not immediately detect certain types of malformed or non-standard RAR archives, potentially containing malicious files. Based on the samples provided, FortiClient will detect the malicious files upon trying extraction by real-time scanning and FortiGate will detect the malicious archive if Virus Outbreak Prevention is enabled.</td>
+            <td>6.2.0 ≤6.2.6, 6.0.0 ≤6.0.10</td>
+            <td>Mar 17, 2025, 1:40:48 PM</td>
+            <td>Mar 17, 2025, 5:57:18 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2020-9295, https://fortiguard.com/psirt/FG-IR-20-037, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2019-16255</td>
+            <td>CVE-2019-6697, GSD-2019-6697, </td>
+            <td>Not available</td>
+            <td>v3.1: 5.2</td>
+            <td>0.05</td>
+            <td>FortiOS</td>
+            <td>Fortinet</td>
+            <td>Mar 17, 2025, 5:56:56 PM</td>
+            <td>An Improper Neutralization of Input vulnerability affecting FortiGate version 6.2.0 through 6.2.1, 6.0.0 through 6.0.6 in the hostname parameter of a DHCP packet under DHCP monitor page may allow an unauthenticated attacker in the same network as the FortiGate to perform a Stored Cross Site Scripting attack (XSS) by sending a crafted DHCP packet.</td>
+            <td>6.2.0 ≤6.2.1</td>
+            <td>Mar 17, 2025, 1:40:57 PM</td>
+            <td>Mar 17, 2025, 5:56:56 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2019-6697, https://fortiguard.com/advisory/FG-IR-19-184, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-6592</td>
+            <td>CVE-2019-15706, GHSA-c369-gmg5-w8pw, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.0</td>
+            <td>0.04</td>
+            <td>FortiOS, FortiProxy, FortiProxy, FortiOS, FortiOS</td>
+            <td>Fortinet</td>
+            <td>Mar 17, 2025, 1:53:31 PM</td>
+            <td>An improper neutralization of input during web page generation in the SSL VPN portal of FortiProxy version 2.0.0, version 1.2.9 and below and FortiOS version 6.2.1 and below, version 6.0.8 and below, version 5.6.12 may allow a remote authenticated attacker to perform a stored cross site scripting attack (XSS).</td>
+            <td>6.0.0 ≤6.0.8, 1.2.0 ≤1.2.9, 2.0.0, 6.2.0 ≤6.2.1, 5.6.12</td>
+            <td>Mar 17, 2025, 1:05:08 PM</td>
+            <td>Mar 17, 2025, 1:53:31 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2019-15706, https://fortiguard.fortinet.com/psirt/FG-IR-19-223, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2021-12908</td>
+            <td>CVE-2021-26087, GSD-2021-26087, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.2</td>
+            <td>0.04</td>
+            <td>FortiWLC, FortiWLC, FortiWLC, FortiWLC, FortiWLC</td>
+            <td>Fortinet</td>
+            <td>Mar 17, 2025, 1:52:53 PM</td>
+            <td>An improper neutralization of input during web page generation in FortiWLC version 8.6.0, version 8.5.3 and below, version 8.4.8 and below, version 8.3.3 web interface may allow both authenticated remote attackers and non-authenticated attackers in the same network as the appliance to perform a stored cross site scripting attack (XSS) via injecting malicious payloads in different locations.</td>
+            <td>8.4.0 ≤8.4.2, 8.4.4 ≤8.4.8, 8.3.3, 8.5.0 ≤8.5.3, 8.6.0</td>
+            <td>Mar 17, 2025, 1:05:19 PM</td>
+            <td>Mar 17, 2025, 1:52:53 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2021-26087, https://fortiguard.fortinet.com/psirt/FG-IR-20-137, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2021-19424</td>
+            <td>CVE-2021-32584, GSD-2021-32584, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.8</td>
+            <td>0.04</td>
+            <td>FortiWLC, FortiWLC, FortiWLC, FortiWLC, FortiWLC, FortiWLC, FortiWLC</td>
+            <td>Fortinet</td>
+            <td>Mar 17, 2025, 1:37:26 PM</td>
+            <td>An improper access control (CWE-284) vulnerability in FortiWLC version 8.6.0, version 8.5.3 and below, version 8.4.8 and below, version 8.3.3 and below, version 8.2.7 to 8.2.4, version 8.1.3 may allow an unauthenticated and remote attacker to access certain areas of the web management CGI functionality by just specifying the correct URL.  The vulnerability applies only to limited CGI resources and might allow the unauthorized party to access configuration details.</td>
+            <td>8.4.4 ≤8.4.8, 8.5.0 ≤8.5.3, 8.4.0 ≤8.4.2, 8.6.0, 8.3.0 ≤8.3.3, 8.1.3, 8.2.4 ≤8.2.7</td>
+            <td>Mar 17, 2025, 1:05:44 PM</td>
+            <td>Mar 17, 2025, 1:37:26 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2021-32584, https://fortiguard.fortinet.com/psirt/FG-IR-20-138, </td>
+        </tr>
+        
+        <tr class="low-risk">
+            <td>EUVD-2025-6589</td>
+            <td>CVE-2019-17659, GHSA-8f4x-4qgh-w73f, </td>
+            <td>Not available</td>
+            <td>v3.1: 3.6</td>
+            <td>0.1</td>
+            <td>FortiSIEM</td>
+            <td>Fortinet</td>
+            <td>Mar 17, 2025, 1:35:08 PM</td>
+            <td>A use of hard-coded cryptographic key vulnerability in FortiSIEM version 5.2.6 may allow a remote unauthenticated attacker to obtain SSH access to the supervisor as the restricted user "tunneluser" by leveraging knowledge of the private key from another installation or a firmware image.</td>
+            <td>5.2.6</td>
+            <td>Mar 17, 2025, 1:06:07 PM</td>
+            <td>Mar 17, 2025, 1:35:08 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2019-17659, https://fortiguard.fortinet.com/psirt/FG-IR-19-296, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2020-21392</td>
+            <td>CVE-2020-29010, GSD-2020-29010, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.9</td>
+            <td>0.03</td>
+            <td>FortiOS, FortiOS</td>
+            <td>Fortinet</td>
+            <td>Mar 17, 2025, 1:32:38 PM</td>
+            <td>An exposure of sensitive information to an unauthorized actor vulnerability in FortiOS version 6.2.4 and below, version 6.0.10 and belowmay allow remote authenticated actors to read the SSL VPN events log entries of users in other VDOMs by  executing "get vpn ssl monitor" from the CLI. The sensitive data includes usernames, user groups, and IP address.</td>
+            <td>6.2.1 ≤6.2.4, 6.0.0 ≤6.0.10</td>
+            <td>Mar 17, 2025, 1:06:16 PM</td>
+            <td>Mar 17, 2025, 1:32:38 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2020-29010, https://fortiguard.fortinet.com/psirt/FG-IR-20-103, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-54079</td>
+            <td>CVE-2024-55594, </td>
+            <td>Not available</td>
+            <td>v3.1: 5.5</td>
+            <td>0.07</td>
+            <td>FortiWeb, FortiWeb, FortiWeb</td>
+            <td>Fortinet</td>
+            <td>Mar 14, 2025, 4:25:33 PM</td>
+            <td>An improper handling of syntactically invalid structure in Fortinet FortiWeb at least vesrions 7.4.0 through 7.4.6 and 7.2.0 through 7.2.10 and 7.0.0 through 7.0.10 allows attacker to execute unauthorized code or commands via HTTP/S crafted requests.</td>
+            <td>7.4.0 ≤7.4.6, 7.2.0 ≤7.2.10, 7.0.0 ≤7.0.10</td>
+            <td>Mar 14, 2025, 4:25:33 PM</td>
+            <td>Mar 14, 2025, 4:25:33 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-23-115, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2023-52818</td>
+            <td>CVE-2023-48785, GSD-2023-48785, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.4</td>
+            <td>100.0</td>
+            <td>FortiNAC-F</td>
+            <td>Fortinet</td>
+            <td>Mar 14, 2025, 3:46:57 PM</td>
+            <td>An improper certificate validation vulnerability [CWE-295] in FortiNAC-F version 7.2.4 and below may allow a remote and unauthenticated attacker to perform a Man-in-the-Middle attack on the HTTPS communication channel between the FortiOS device, an inventory, and FortiNAC-F.</td>
+            <td>7.2.0 ≤7.2.4</td>
+            <td>Mar 14, 2025, 3:46:57 PM</td>
+            <td>Mar 14, 2025, 3:46:57 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-288, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2023-37463</td>
+            <td>CVE-2023-33300, GSD-2023-33300, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.8</td>
+            <td>7.78</td>
+            <td>FortiNAC, FortiNAC</td>
+            <td>Fortinet</td>
+            <td>Mar 14, 2025, 3:46:48 PM</td>
+            <td>A improper neutralization of special elements used in a command ('command injection') in Fortinet FortiNAC 7.2.1 and earlier, 9.4.3 and earlier allows attacker a limited, unauthorized file access via specifically crafted request in inter-server  communication port.</td>
+            <td>9.4.0 ≤9.4.3, 7.2.0 ≤7.2.1</td>
+            <td>Mar 14, 2025, 3:46:48 PM</td>
+            <td>Mar 14, 2025, 3:46:48 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-096, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2023-49880</td>
+            <td>CVE-2023-45588, GSD-2023-45588, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.8</td>
+            <td>100.0</td>
+            <td>FortiClientMac, FortiClientMac</td>
+            <td>Fortinet</td>
+            <td>Mar 14, 2025, 3:46:35 PM</td>
+            <td>An external control of file name or path vulnerability [CWE-73] in  FortiClientMac version 7.2.3 and below, version 7.0.10 and below installer may allow a local attacker to execute arbitrary code or commands via writing a malicious configuration file in /tmp before starting the installation process.</td>
+            <td>7.0.6 ≤7.0.10, 7.2.0 ≤7.2.3</td>
+            <td>Mar 14, 2025, 3:46:35 PM</td>
+            <td>Mar 14, 2025, 3:46:35 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-345, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-54082</td>
+            <td>CVE-2024-40585, </td>
+            <td>Not available</td>
+            <td>v3.1: 5.9</td>
+            <td>0.02</td>
+            <td>FortiManager, FortiManager, FortiAnalyzer, FortiAnalyzer, FortiManager, FortiAnalyzer, FortiManager, FortiAnalyzer, FortiAnalyzer, FortiManager</td>
+            <td>Fortinet</td>
+            <td>Mar 14, 2025, 3:45:46 PM</td>
+            <td>An insertion of sensitive information into log file vulnerabilities [CWE-532] in FortiManager version 7.4.0, version 7.2.3 and below, version 7.0.8 and below, version 6.4.12 and below, version 6.2.11 and below and FortiAnalyzer version 7.4.0, version 7.2.3 and below, version 7.0.8 and below, version 6.4.12 and below, version 6.2.11 and below eventlog may allow any low privileged user with access to event log section to retrieve certificate private key and encrypted password logged as system log.</td>
+            <td>7.4.0, 7.2.0 ≤7.2.3, 7.0.0 ≤7.0.8, 6.4.0 ≤6.4.12, 6.4.0 ≤6.4.12, 6.2.0 ≤6.2.11, 7.0.0 ≤7.0.8, 7.2.0 ≤7.2.3, 7.4.0, 6.2.0 ≤6.2.11</td>
+            <td>Mar 14, 2025, 3:45:46 PM</td>
+            <td>Mar 14, 2025, 3:45:46 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-311, </td>
+        </tr>
+        
+        <tr class="low-risk">
+            <td>EUVD-2022-33472</td>
+            <td>CVE-2022-29059, GSD-2022-29059, </td>
+            <td>Not available</td>
+            <td>v3.1: 2.6</td>
+            <td>0.06</td>
+            <td>FortiWeb, FortiWeb, FortiWeb, FortiWeb</td>
+            <td>Fortinet</td>
+            <td>Mar 14, 2025, 3:45:33 PM</td>
+            <td>An improper neutralization of special elements used in an SQL command ('SQL Injection') vulnerability [CWE-89] in FortiWeb version 7.0.1 and below, 6.4.2 and below, 6.3.20 and below, 6.2.7 and below may allow a privileged attacker to execute SQL commands over the log database via specifically crafted strings parameters.</td>
+            <td>6.4.0 ≤6.4.3, 6.3.0 ≤6.3.23, 7.0.0 ≤7.0.1, 6.2.3 ≤6.2.8</td>
+            <td>Mar 14, 2025, 3:45:33 PM</td>
+            <td>Mar 14, 2025, 3:45:33 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-22-140, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-54073</td>
+            <td>CVE-2024-40590, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.4</td>
+            <td>0.01</td>
+            <td>FortiPortal, FortiPortal, FortiPortal, FortiPortal</td>
+            <td>Fortinet</td>
+            <td>Mar 14, 2025, 3:32:04 PM</td>
+            <td>An improper certificate validation vulnerability [CWE-295] in FortiPortal version 7.4.0, version 7.2.4 and below, version 7.0.8 and below, version 6.0.15 and below when connecting to a FortiManager device, a FortiAnalyzer device, or an SMTP server may allow an unauthenticated attacker in a Man-in-the-Middle position to intercept on and tamper with the encrypted communication channel established between the FortiPortal and those endpoints.</td>
+            <td>7.4.0, 7.0.0 ≤7.0.8, 7.2.0 ≤7.2.4, 6.0.0 ≤6.0.15</td>
+            <td>Mar 14, 2025, 3:32:04 PM</td>
+            <td>Mar 14, 2025, 3:32:04 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-22-155, https://nvd.nist.gov/vuln/detail/CVE-2024-40590, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2024-54072</td>
+            <td>CVE-2024-46662, </td>
+            <td>Not available</td>
+            <td>v3.1: 8.3</td>
+            <td>0.12</td>
+            <td>FortiManager</td>
+            <td>Fortinet</td>
+            <td>Mar 14, 2025, 3:32:04 PM</td>
+            <td>A improper neutralization of special elements used in a command ('command injection') in Fortinet FortiManager versions 7.4.1 through 7.4.3, FortiManager Cloud versions 7.4.1 through 7.4.3 allows attacker to escalation of privilege via specifically crafted packets</td>
+            <td>7.4.1 ≤7.4.3</td>
+            <td>Mar 14, 2025, 3:32:04 PM</td>
+            <td>Mar 14, 2025, 3:32:04 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-222, https://nvd.nist.gov/vuln/detail/CVE-2024-46662, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-54071</td>
+            <td>CVE-2024-47573, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.0</td>
+            <td>0.02</td>
+            <td>FortiNDR, FortiNDR, FortiNDR, FortiNDR</td>
+            <td>Fortinet</td>
+            <td>Mar 14, 2025, 3:32:04 PM</td>
+            <td>An improper validation of integrity check value vulnerability [CWE-354] in FortiNDR version 7.4.2 and below, version 7.2.1 and below, version 7.1.1 and below, version 7.0.6 and below may allow an authenticated attacker with at least Read/Write permission on system maintenance to install a corrupted firmware image.</td>
+            <td>7.2.0 ≤7.2.1, 7.0.0 ≤7.0.6, 7.4.0 ≤7.4.2, 7.1.0 ≤7.1.1</td>
+            <td>Mar 14, 2025, 3:32:04 PM</td>
+            <td>Mar 14, 2025, 3:32:04 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-23-461, https://nvd.nist.gov/vuln/detail/CVE-2024-47573, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-23302</td>
+            <td>CVE-2024-26006, GSD-2024-26006, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.9</td>
+            <td>0.05</td>
+            <td>FortiOS, FortiProxy, FortiOS, FortiProxy, FortiOS, FortiOS, FortiProxy</td>
+            <td>Fortinet</td>
+            <td>Mar 14, 2025, 1:09:27 PM</td>
+            <td>An improper neutralization of input during web page Generation vulnerability [CWE-79] in FortiOS version 7.4.3 and below, version 7.2.7 and below, version 7.0.13 and below and FortiProxy version 7.4.3 and below, version 7.2.9 and below, version 7.0.16 and below web SSL VPN UI may allow a remote unauthenticated attacker to perform a Cross-Site Scripting attack via a malicious samba server.</td>
+            <td>7.4.0 ≤7.4.3, 7.2.0 ≤7.2.9, 6.4.0 ≤6.4.15, 7.0.0 ≤7.0.16, 7.0.0 ≤7.0.13, 7.2.0 ≤7.2.7, 7.4.0 ≤7.4.3</td>
+            <td>Mar 14, 2025, 9:24:56 AM</td>
+            <td>Mar 14, 2025, 1:09:27 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-26006, https://fortiguard.fortinet.com/psirt/FG-IR-23-485, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-54213</td>
+            <td>CVE-2024-46663, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.5</td>
+            <td>0.02</td>
+            <td>FortiMail, FortiMail, FortiMail, FortiMail, FortiMail</td>
+            <td>Fortinet</td>
+            <td>Mar 12, 2025, 4:00:58 AM</td>
+            <td>A stack-buffer overflow vulnerability [CWE-121] in Fortinet FortiMail CLI version 7.6.0 through 7.6.1 and before 7.4.3 allows a privileged attacker to execute arbitrary code or commands via specifically crafted CLI commands.</td>
+            <td>7.6.0 ≤7.6.1, 6.4.0 ≤6.4.8, 7.4.0 ≤7.4.3, 7.0.0 ≤7.0.8, 7.2.0 ≤7.2.7</td>
+            <td>Mar 11, 2025, 2:54:31 PM</td>
+            <td>Mar 12, 2025, 4:00:58 AM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-331, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2024-54238</td>
+            <td>CVE-2024-52961, </td>
+            <td>Not available</td>
+            <td>v3.1: 8.6</td>
+            <td>0.07</td>
+            <td>FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox</td>
+            <td>Fortinet</td>
+            <td>Mar 12, 2025, 4:00:57 AM</td>
+            <td>An improper neutralization of special elements used in an OS Command vulnerability [CWE-78] in Fortinet FortiSandbox version 5.0.0, 4.4.0 through 4.4.7, 4.2.0 through 4.2.7 and before 4.0.5 allows an authenticated attacker with at least read-only permission to execute unauthorized commands via crafted requests.</td>
+            <td>3.0.0 ≤3.0.7, 3.1.0 ≤3.1.5, 5.0.0, 4.2.0 ≤4.2.7, 3.2.0 ≤3.2.4, 4.0.0 ≤4.0.5, 4.4.0 ≤4.4.6</td>
+            <td>Mar 11, 2025, 2:54:30 PM</td>
+            <td>Mar 12, 2025, 4:00:57 AM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-306, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2024-54212</td>
+            <td>CVE-2024-45328, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.1</td>
+            <td>0.01</td>
+            <td>FortiSandbox</td>
+            <td>Fortinet</td>
+            <td>Mar 12, 2025, 4:00:56 AM</td>
+            <td>An incorrect authorization vulnerability [CWE-863] in FortiSandbox 4.4.0 through 4.4.6 may allow a low priviledged administrator to execute elevated CLI commands via the GUI console menu.</td>
+            <td>4.4.0 ≤4.4.6</td>
+            <td>Mar 11, 2025, 2:54:28 PM</td>
+            <td>Mar 12, 2025, 4:00:56 AM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-261, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2024-54211</td>
+            <td>CVE-2024-45324, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.0</td>
+            <td>0.17</td>
+            <td>FortiProxy, FortiOS, FortiPAM, FortiWeb, FortiPAM, FortiPAM, FortiPAM, FortiSRA, FortiWeb, FortiOS, FortiProxy, FortiWeb, FortiPAM, FortiOS, FortiProxy, FortiOS, FortiProxy, FortiWeb, FortiOS</td>
+            <td>Fortinet</td>
+            <td>Mar 12, 2025, 4:00:50 AM</td>
+            <td>A use of externally-controlled format string vulnerability [CWE-134] in FortiOS version 7.4.0 through 7.4.4, version 7.2.0 through 7.2.9, version 7.0.0 through 7.0.15 and before 6.4.15, FortiProxy version 7.4.0 through 7.4.6, version 7.2.0 through 7.2.12 and before 7.0.19, FortiPAM version 1.4.0 through 1.4.2 and before 1.3.1, FortiSRA version 1.4.0 through 1.4.2 and before 1.3.1 and FortiWeb version 7.4.0 through 7.4.5, version 7.2.0 through 7.2.10 and before 7.0.10 allows a privileged attacker to execute unauthorized code or commands via specially crafted HTTP or HTTPS commands.</td>
+            <td>7.2.0 ≤7.2.12, 7.0.0 ≤7.0.15, 1.4.0 ≤1.4.2, 7.2.0 ≤7.2.10, 1.2.0, 1.0.0 ≤1.0.3, 1.1.0 ≤1.1.2, 1.4.0 ≤1.4.2, 7.6.0, 7.2.0 ≤7.2.9, 7.0.0 ≤7.0.19, 7.0.0 ≤7.0.10, 1.3.0 ≤1.3.1, 7.4.0 ≤7.4.4, 7.4.0 ≤7.4.6, 6.2.0 ≤6.2.16, 7.6.0, 7.4.0 ≤7.4.5, 6.4.0 ≤6.4.15</td>
+            <td>Mar 11, 2025, 2:54:33 PM</td>
+            <td>Mar 12, 2025, 4:00:50 AM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-325, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2023-45277</td>
+            <td>CVE-2023-40723, GSD-2023-40723, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.7</td>
+            <td>0.06</td>
+            <td>FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM</td>
+            <td>Fortinet</td>
+            <td>Mar 12, 2025, 4:00:49 AM</td>
+            <td>An exposure of sensitive information to an unauthorized actor in Fortinet FortiSIEM version 6.7.0 through 6.7.4 and 6.6.0 through 6.6.3 and 6.5.0 through 6.5.1 and 6.4.0 through 6.4.2 and 6.3.0 through 6.3.3 and 6.2.0 through 6.2.1 and 6.1.0 through 6.1.2 and 5.4.0 and 5.3.0 through 5.3.3 and 5.2.5 through 5.2.8 and 5.2.1 through 5.2.2 and 5.1.0 through 5.1.3 allows attacker to execute unauthorized code or commands via api request.</td>
+            <td>5.3.0 ≤5.3.3, 6.3.0 ≤6.3.3, 5.2.1 ≤5.2.2, 5.2.5 ≤5.2.8, 6.5.0 ≤6.5.1, 6.6.0 ≤6.6.3, 6.4.0 ≤6.4.2, 6.7.0 ≤6.7.4, 5.4.0, 6.2.0 ≤6.2.1, 5.1.0 ≤5.1.3, 6.1.0 ≤6.1.2</td>
+            <td>Mar 11, 2025, 2:54:28 PM</td>
+            <td>Mar 12, 2025, 4:00:49 AM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-117, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2023-41786</td>
+            <td>CVE-2023-37933, GSD-2023-37933, </td>
+            <td>Not available</td>
+            <td>v3.1: 8.6</td>
+            <td>0.09</td>
+            <td>FortiADC, FortiADC, FortiADC, FortiADC, FortiADC, FortiADC, FortiADC, FortiADC, FortiADC</td>
+            <td>Fortinet</td>
+            <td>Mar 12, 2025, 4:00:48 AM</td>
+            <td>An improper neutralization of input during web page generation ('Cross-site Scripting') vulnerability [CWE-79] in FortiADC GUI version 7.4.0, 7.2.0 through 7.2.1	and before 7.1.3 allows an authenticated attacker to perform an XSS attack via crafted HTTP or HTTPs requests.</td>
+            <td>7.2.0 ≤7.2.1, 7.4.0, 5.3.0 ≤5.3.7, 7.0.0 ≤7.0.5, 6.0.0 ≤6.0.4, 5.4.0 ≤5.4.5, 6.1.0 ≤6.1.6, 6.2.0 ≤6.2.6, 7.1.0 ≤7.1.3</td>
+            <td>Mar 11, 2025, 2:54:35 PM</td>
+            <td>Mar 12, 2025, 4:00:48 AM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-216, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-54249</td>
+            <td>CVE-2024-54018, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.8</td>
+            <td>0.08</td>
+            <td>FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox</td>
+            <td>Fortinet</td>
+            <td>Mar 12, 2025, 4:00:46 AM</td>
+            <td>Multiple improper neutralization of special elements used in an OS Command vulnerabilities [CWE-78] in FortiSandbox before 4.4.5 allows a privileged attacker to execute unauthorized commands via crafted requests.</td>
+            <td>4.4.0 ≤4.4.4, 4.2.0 ≤4.2.6, 4.0.0 ≤4.0.6, 3.2.0 ≤3.2.4</td>
+            <td>Mar 11, 2025, 2:54:37 PM</td>
+            <td>Mar 12, 2025, 4:00:46 AM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-110, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-29944</td>
+            <td>CVE-2024-32123, GSD-2024-32123, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.5</td>
+            <td>0.05</td>
+            <td>FortiManager, FortiManager, FortiAnalyzer, FortiAnalyzer, FortiManager, FortiAnalyzer, FortiManager, FortiManager, FortiAnalyzer, FortiManager, FortiAnalyzer, FortiManager, FortiManager, FortiManager, FortiManager, FortiManager</td>
+            <td>Fortinet</td>
+            <td>Mar 12, 2025, 4:00:45 AM</td>
+            <td>Multiple improper neutralization of special elements used in an os command ('os command injection') in Fortinet FortiManager, FortiAnalyzer versions 7.4.0 through 7.4.2
+7.2.0 through 7.2.5 and 7.0.0 through 7.0.12 and 6.4.0 through 6.4.14 and 6.2.0 through 6.2.12 and 6.0.0 through 6.0.12 and 5.6.0 through 5.6.11 and 5.4.0 through 5.4.7 and 5.2.0 through 5.2.10 and 5.0.0 through 5.0.12 and 4.3.4 through 4.3.8 allows attacker to execute unauthorized code or commands via crafted CLI requests.</td>
+            <td>4.3.4 ≤4.3.8, 5.2.0 ≤5.2.10, 7.4.0 ≤7.4.2, 7.2.0 ≤7.2.5, 5.0.0 ≤5.0.12, 7.0.0 ≤7.0.13, 7.4.0 ≤7.4.2, 6.4.0 ≤6.4.15, 6.2.0 ≤6.2.13, 6.2.0 ≤6.2.13, 6.4.0 ≤6.4.15, 7.0.0 ≤7.0.13, 6.0.0 ≤6.0.12, 5.4.0 ≤5.4.7, 5.6.0 ≤5.6.11, 7.2.0 ≤7.2.5</td>
+            <td>Mar 11, 2025, 2:54:38 PM</td>
+            <td>Mar 12, 2025, 4:00:45 AM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-24-124, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2023-47214</td>
+            <td>CVE-2023-42784, GSD-2023-42784, </td>
+            <td>Not available</td>
+            <td>v3.1: 5.5</td>
+            <td>0.07</td>
+            <td>FortiWeb, FortiWeb, FortiWeb</td>
+            <td>Fortinet</td>
+            <td>Mar 11, 2025, 4:10:57 PM</td>
+            <td>An improper handling of syntactically invalid structure in Fortinet FortiWeb at least verions 7.4.0 through 7.4.6 and 7.2.0 through 7.2.10 and 7.0.0 through 7.0.10 allows attacker to execute unauthorized code or commands via HTTP/S crafted requests.</td>
+            <td>7.2.0 ≤7.2.10, 7.0.0 ≤7.0.10, 7.4.0 ≤7.4.7</td>
+            <td>Mar 11, 2025, 2:54:28 PM</td>
+            <td>Mar 11, 2025, 4:10:57 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-23-115, </td>
+        </tr>
+        
+        <tr class="low-risk">
+            <td>EUVD-2024-54266</td>
+            <td>CVE-2024-55592, </td>
+            <td>Not available</td>
+            <td>v3.1: 3.6</td>
+            <td>0.02</td>
+            <td>FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM</td>
+            <td>Fortinet</td>
+            <td>Mar 11, 2025, 4:07:03 PM</td>
+            <td>An incorrect authorization vulnerability [CWE-863] in FortiSIEM 7.2 all versions, 7.1 all versions, 7.0 all versions, 6.7 all versions, 6.6 all versions, 6.5 all versions, 6.4 all versions, 6.3 all versions, 6.2 all versions, 6.1 all versions, 5.4 all versions, 5.3 all versions, may allow an authenticated attacker to perform unauthorized operations on incidents via crafted HTTP requests.</td>
+            <td>7.0.0 ≤7.0.3, 6.3.0 ≤6.3.3, 6.6.0 ≤6.6.5, 6.1.0 ≤6.1.2, 7.2.0 ≤7.2.5, 6.7.0 ≤6.7.9, 5.4.0, 6.4.0 ≤6.4.4, 5.3.0 ≤5.3.3, 7.1.0 ≤7.1.7, 6.2.0 ≤6.2.1, 6.5.0 ≤6.5.3</td>
+            <td>Mar 11, 2025, 2:54:29 PM</td>
+            <td>Mar 11, 2025, 4:07:03 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-377, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-54267</td>
+            <td>CVE-2024-55597, </td>
+            <td>Not available</td>
+            <td>v3.1: 5.2</td>
+            <td>0.08</td>
+            <td>FortiWeb, FortiWeb, FortiWeb, FortiWeb</td>
+            <td>Fortinet</td>
+            <td>Mar 11, 2025, 4:06:25 PM</td>
+            <td>A improper limitation of a pathname to a restricted directory ('path traversal') in Fortinet FortiWeb versions 7.0.0 through 7.6.0 allows attacker to execute unauthorized code or commands via crafted requests.</td>
+            <td>7.2.0 ≤7.2.10, 7.4.0 ≤7.4.5, 7.0.0 ≤7.0.10, 7.6.0</td>
+            <td>Mar 11, 2025, 2:54:26 PM</td>
+            <td>Mar 11, 2025, 4:06:25 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-439, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2023-52823</td>
+            <td>CVE-2023-48790, GSD-2023-48790, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.1</td>
+            <td>0.09</td>
+            <td>FortiNDR, FortiNDR, FortiNDR, FortiNDR, FortiNDR</td>
+            <td>Fortinet</td>
+            <td>Mar 11, 2025, 4:05:58 PM</td>
+            <td>A cross site request forgery vulnerability [CWE-352] in Fortinet FortiNDR version 7.4.0, 7.2.0 through 7.2.1 and 7.1.0 through 7.1.1 and before 7.0.5 may allow a remote unauthenticated attacker to execute unauthorized actions via crafted HTTP GET requests.</td>
+            <td>7.4.0, 7.2.0 ≤7.2.1, 7.0.0 ≤7.0.5, 7.1.0 ≤7.1.1, 1.5.0 ≤1.5.3</td>
+            <td>Mar 11, 2025, 2:54:31 PM</td>
+            <td>Mar 11, 2025, 4:05:58 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-23-353, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2024-54265</td>
+            <td>CVE-2024-55590, </td>
+            <td>Not available</td>
+            <td>v3.1: 8.6</td>
+            <td>0.24</td>
+            <td>FortiIsolator</td>
+            <td>Fortinet</td>
+            <td>Mar 11, 2025, 4:05:38 PM</td>
+            <td>Multiple improper neutralization of special elements used in an OS command ('OS Command Injection') vulnerabilities [CWE-78] in Fortinet FortiIsolator version 2.4.0 through 2.4.5 allows an authenticated attacker with at least read-only admin permission and CLI access to execute unauthorized code via specifically crafted CLI commands.</td>
+            <td>2.4.0 ≤2.4.5</td>
+            <td>Mar 11, 2025, 2:54:34 PM</td>
+            <td>Mar 11, 2025, 4:05:38 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-178, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-54237</td>
+            <td>CVE-2024-52960, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.2</td>
+            <td>0.03</td>
+            <td>FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox</td>
+            <td>Fortinet</td>
+            <td>Mar 11, 2025, 4:05:31 PM</td>
+            <td>A client-side enforcement of server-side security vulnerability [CWE-602] in Fortinet FortiSandbox version 5.0.0, 4.4.0 through 4.4.6 and before 4.2.7 allows an authenticated attacker with at least read-only permission to execute unauthorized commands via crafted requests.</td>
+            <td>5.0.0, 4.0.0 ≤4.0.6, 3.2.0 ≤3.2.4, 4.2.0 ≤4.2.7, 3.0.0 ≤3.0.7, 4.4.0 ≤4.4.6, 3.1.0 ≤3.1.5</td>
+            <td>Mar 11, 2025, 2:54:35 PM</td>
+            <td>Mar 11, 2025, 4:05:31 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-305, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-54250</td>
+            <td>CVE-2024-54026, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.1</td>
+            <td>0.04</td>
+            <td>FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox</td>
+            <td>Fortinet</td>
+            <td>Mar 11, 2025, 4:05:02 PM</td>
+            <td>An improper neutralization of special elements used in an sql command ('sql injection') in Fortinet FortiSandbox Cloud version 23.4, FortiSandbox at least 4.4.0 through 4.4.6 and 4.2.0 through 4.2.7 and 4.0.0 through 4.0.5 and 3.2.0 through 3.2.4 and 3.1.0 through 3.1.5 and 3.0.0 through 3.0.7 allows attacker to execute unauthorized code or commands via specifically crafted HTTP requests.</td>
+            <td>4.4.0 ≤4.4.6, 3.0.0 ≤3.0.7, 4.2.0 ≤4.2.8, 3.2.0 ≤3.2.4, 3.1.0 ≤3.1.5, 4.0.0 ≤4.0.6</td>
+            <td>Mar 11, 2025, 2:54:38 PM</td>
+            <td>Mar 11, 2025, 4:05:02 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-353, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-31239</td>
+            <td>CVE-2024-33501, GSD-2024-33501, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.0</td>
+            <td>0.02</td>
+            <td>FortiManager, FortiManager, FortiManager, FortiManager, FortiManager, FortiManager</td>
+            <td>Fortinet</td>
+            <td>Mar 11, 2025, 4:04:54 PM</td>
+            <td>Two improper neutralization of special elements used in an SQL Command ('SQL Injection') vulnerability [CWE-89] in Fortinet FortiAnalyzer version 7.4.0 through 7.4.2 and before 7.2.5, FortiManager version 7.4.0 through 7.4.2 and before 7.2.5 and FortiAnalyzer-BigData version 7.4.0 and before 7.2.7 allows a privileged attacker to execute unauthorized code or commands via specifically crafted CLI requests.</td>
+            <td>7.2.0 ≤7.2.5, 6.4.4 ≤6.4.15, 6.0.10 ≤6.0.12, 6.2.8 ≤6.2.13, 7.4.0 ≤7.4.2, 7.0.0 ≤7.0.13</td>
+            <td>Mar 11, 2025, 2:54:41 PM</td>
+            <td>Mar 11, 2025, 4:04:54 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-130, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2023-51653</td>
+            <td>CVE-2023-47542, GSD-2023-47542, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.3</td>
+            <td>0.07</td>
+            <td>FortiManager, FortiManager, FortiManager</td>
+            <td>Fortinet</td>
+            <td>Feb 26, 2025, 6:40:53 PM</td>
+            <td>A improper neutralization of special elements used in a template engine [CWE-1336] in FortiManager versions 7.4.1 and below, versions 7.2.4 and below, and 7.0.10 and below allows attacker to execute unauthorized code or commands via specially crafted templates.</td>
+            <td>7.0.0 ≤7.0.10, 7.4.0 ≤7.4.1, 7.2.0 ≤7.2.4</td>
+            <td>Apr 9, 2024, 2:24:24 PM</td>
+            <td>Feb 26, 2025, 6:40:53 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-419, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-42217</td>
+            <td>CVE-2024-46666, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.8</td>
+            <td>0.08</td>
+            <td>FortiOS, FortiOS, FortiOS, FortiOS, FortiOS</td>
+            <td>Fortinet</td>
+            <td>Feb 18, 2025, 9:39:30 PM</td>
+            <td>An allocation of resources without limits or throttling [CWE-770] vulnerability in FortiOS versions 7.6.0, versions 7.4.4 through 7.4.0, 7.2 all versions, 7.0 all versions, 6.4 all versions may allow a remote unauthenticated attacker to prevent access to the GUI via specially crafted requests directed at specific endpoints.</td>
+            <td>7.2.0 ≤7.2.10, 7.0.0 ≤7.0.16, 7.6.0, 7.4.0 ≤7.4.4, 6.4.0 ≤6.4.15</td>
+            <td>Jan 14, 2025, 2:09:56 PM</td>
+            <td>Feb 18, 2025, 9:39:30 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-250, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-19372</td>
+            <td>CVE-2024-21758, GSD-2024-21758, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.1</td>
+            <td>0.02</td>
+            <td>FortiWeb, FortiWeb</td>
+            <td>Fortinet</td>
+            <td>Feb 18, 2025, 9:38:54 PM</td>
+            <td>A stack-based buffer overflow in Fortinet FortiWeb versions 7.2.0 through 7.2.7, and 7.4.0 through 7.4.1 may allow a privileged user to execute arbitrary code via specially crafted CLI commands, provided the user is able to evade FortiWeb stack protections.</td>
+            <td>7.2.0 ≤7.2.7, 7.4.0 ≤7.4.1</td>
+            <td>Jan 14, 2025, 2:09:56 PM</td>
+            <td>Feb 18, 2025, 9:38:54 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-23-458, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-36358</td>
+            <td>CVE-2024-36504, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.2</td>
+            <td>0.08</td>
+            <td>FortiOS, FortiOS, FortiOS, FortiOS</td>
+            <td>Fortinet</td>
+            <td>Feb 18, 2025, 9:38:19 PM</td>
+            <td>An out-of-bounds read vulnerability [CWE-125] in FortiOS SSLVPN web portal versions 7.4.0 through 7.4.4, versions 7.2.0 through 7.2.8, 7.0 all verisons, and 6.4 all versions may allow an authenticated attacker to perform a denial of service on the SSLVPN web portal via a specially crafted URL.</td>
+            <td>7.2.0 ≤7.2.8, 6.4.0 ≤6.4.15, 7.4.0 ≤7.4.4, 7.0.0 ≤7.0.16</td>
+            <td>Jan 14, 2025, 2:09:58 PM</td>
+            <td>Feb 18, 2025, 9:38:19 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-23-473, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-42207</td>
+            <td>CVE-2024-46667, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.9</td>
+            <td>0.06</td>
+            <td>FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM, FortiSIEM</td>
+            <td>Fortinet</td>
+            <td>Feb 18, 2025, 9:37:18 PM</td>
+            <td>A allocation of resources without limits or throttling in Fortinet FortiSIEM 5.3 all versions, 5.4 all versions, 6.x all versions, 7.0 all versions, and 7.1.0 through 7.1.5 may allow an attacker to deny valid TLS traffic via consuming all allotted connections.</td>
+            <td>6.1.0 ≤6.1.2, 7.1.0 ≤7.1.5, 6.7.0 ≤6.7.9, 5.4.0, 5.3.0 ≤5.3.3, 7.0.0 ≤7.0.3, 6.4.0 ≤6.4.4, 6.2.0 ≤6.2.1, 6.3.0 ≤6.3.3, 6.6.0 ≤6.6.5, 6.5.0 ≤6.5.3</td>
+            <td>Jan 14, 2025, 2:09:58 PM</td>
+            <td>Feb 18, 2025, 9:37:18 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-164, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2024-42865</td>
+            <td>CVE-2024-47572, </td>
+            <td>Not available</td>
+            <td>v3.1: 8.3</td>
+            <td>0.06</td>
+            <td>FortiSOAR, FortiSOAR, FortiSOAR</td>
+            <td>Fortinet</td>
+            <td>Feb 18, 2025, 9:36:45 PM</td>
+            <td>An improper neutralization of formula elements in a csv file in Fortinet FortiSOAR 7.2.1 through 7.4.1 allows attacker to execute unauthorized code or commands via manipulating csv file</td>
+            <td>7.4.0 ≤7.4.1, 7.3.0 ≤7.3.2, 7.2.1 ≤7.2.2</td>
+            <td>Jan 14, 2025, 2:09:59 PM</td>
+            <td>Feb 18, 2025, 9:36:45 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-210, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2023-41784</td>
+            <td>CVE-2023-37931, GSD-2023-37931, </td>
+            <td>Not available</td>
+            <td>v3.1: 8.6</td>
+            <td>0.13</td>
+            <td>FortiVoice, FortiVoice, FortiVoice</td>
+            <td>Fortinet</td>
+            <td>Feb 18, 2025, 9:35:20 PM</td>
+            <td>An improper neutralization of special elements used in an sql command ('sql injection') vulnerability [CWE-88] in FortiVoice Entreprise version 7.0.0 through 7.0.1 and before 6.4.8 allows an authenticated attacker to perform a blind sql injection attack via sending crafted HTTP or HTTPS requests</td>
+            <td>7.0.0 ≤7.0.1, 6.4.0 ≤6.4.8, 6.0.0 ≤6.0.12</td>
+            <td>Jan 14, 2025, 2:10:00 PM</td>
+            <td>Feb 18, 2025, 9:35:20 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-220, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2024-20631</td>
+            <td>CVE-2024-23106, GSD-2024-23106, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.7</td>
+            <td>0.08</td>
+            <td>FortiClientEMS, FortiClientEMS, FortiClientEMS, FortiClientEMS, FortiClientEMS, FortiClientEMS</td>
+            <td>Fortinet</td>
+            <td>Feb 18, 2025, 9:34:28 PM</td>
+            <td>An improper restriction of excessive authentication attempts [CWE-307] in FortiClientEMS version 7.2.0 through 7.2.4 and before 7.0.10 allows an unauthenticated attacker to try a brute force attack against the FortiClientEMS console via crafted HTTP or HTTPS requests.</td>
+            <td>6.4.0 ≤6.4.4, 7.0.0 ≤7.0.10, 6.4.7 ≤6.4.9, 6.2.0 ≤6.2.4, 6.2.6 ≤6.2.9, 7.2.0 ≤7.2.3</td>
+            <td>Jan 14, 2025, 2:10:00 PM</td>
+            <td>Feb 18, 2025, 9:34:28 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-23-476, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-29936</td>
+            <td>CVE-2024-32115, GSD-2024-32115, </td>
+            <td>Not available</td>
+            <td>v3.1: 5.2</td>
+            <td>0.24</td>
+            <td>FortiManager, FortiManager, FortiManager</td>
+            <td>Fortinet</td>
+            <td>Feb 18, 2025, 9:33:30 PM</td>
+            <td>A relative path traversal vulnerability [CWE-23] in Fortinet FortiManager  version 7.4.0 through 7.4.2 and before 7.2.5 allows a privileged attacker to delete files from the underlying filesystem via crafted HTTP or HTTPs requests.</td>
+            <td>7.0.0 ≤7.0.13, 7.4.0 ≤7.4.2, 7.2.0 ≤7.2.5</td>
+            <td>Jan 14, 2025, 2:10:01 PM</td>
+            <td>Feb 18, 2025, 9:33:30 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-097, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2025-4981</td>
+            <td>CVE-2024-40591, GHSA-hmpg-p67j-959p, </td>
+            <td>Not available</td>
+            <td>v3.1: 8.0</td>
+            <td>0.05</td>
+            <td>FortiOS, FortiOS, FortiOS, FortiOS, FortiOS</td>
+            <td>Fortinet</td>
+            <td>Feb 14, 2025, 4:55:21 AM</td>
+            <td>An incorrect privilege assignment vulnerability [CWE-266] in Fortinet FortiOS version 7.6.0, 7.4.0 through 7.4.4, 7.2.0 through 7.2.9 and before 7.0.15 allows an authenticated admin whose access profile has the Security Fabric permission to escalate their privileges to super-admin by connecting the targetted FortiGate to a malicious upstream FortiGate they control.</td>
+            <td>7.4.0 ≤7.4.4, 6.4.0 ≤6.4.15, 7.6.0, 7.2.0 ≤7.2.9, 7.0.0 ≤7.0.15</td>
+            <td>Feb 11, 2025, 4:09:02 PM</td>
+            <td>Feb 14, 2025, 4:55:21 AM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-40591, https://fortiguard.fortinet.com/psirt/FG-IR-24-302, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2025-4982</td>
+            <td>CVE-2024-35279, GHSA-8ccx-r52j-39f8, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.7</td>
+            <td>0.13</td>
+            <td>FortiOS, FortiOS</td>
+            <td>Fortinet</td>
+            <td>Feb 14, 2025, 4:55:19 AM</td>
+            <td>A stack-based buffer overflow [CWE-121] vulnerability in Fortinet FortiOS version 7.2.4 through 7.2.8 and version 7.4.0 through 7.4.4 allows a remote unauthenticated attacker to execute arbitrary code or commands via crafted UDP packets through the CAPWAP control, provided the attacker were able to evade FortiOS stack protections and provided the fabric service is running on the exposed interface.</td>
+            <td>7.4.0 ≤7.4.4, 7.2.4 ≤7.2.8</td>
+            <td>Feb 11, 2025, 4:09:02 PM</td>
+            <td>Feb 14, 2025, 4:55:19 AM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-35279, https://fortiguard.fortinet.com/psirt/FG-IR-24-160, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-4973</td>
+            <td>CVE-2024-50569, GHSA-x7j3-3mr3-jq5q, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.3</td>
+            <td>0.26</td>
+            <td>FortiWeb, FortiWeb, FortiWeb, FortiWeb</td>
+            <td>Fortinet</td>
+            <td>Feb 14, 2025, 4:55:18 AM</td>
+            <td>A improper neutralization of special elements used in an os command ('os command injection') in Fortinet FortiWeb 7.0.0 through 7.6.0 allows attacker to execute unauthorized code or commands via crafted input.</td>
+            <td>7.2.0 ≤7.2.10, 7.4.0 ≤7.4.5, 7.6.0, 7.0.0 ≤7.0.10</td>
+            <td>Feb 11, 2025, 4:09:00 PM</td>
+            <td>Feb 14, 2025, 4:55:18 AM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-50569, https://fortiguard.fortinet.com/psirt/FG-IR-24-438, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-4978</td>
+            <td>CVE-2024-50567, GHSA-g5rj-645r-67rh, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.8</td>
+            <td>0.26</td>
+            <td>FortiWeb, FortiWeb</td>
+            <td>Fortinet</td>
+            <td>Feb 14, 2025, 4:55:16 AM</td>
+            <td>An improper neutralization of special elements used in an os command ('os command injection') in Fortinet FortiWeb 7.4.0 through 7.6.0 allows attacker to execute unauthorized code or commands via crafted input.</td>
+            <td>7.4.0 ≤7.4.5, 7.6.0</td>
+            <td>Feb 11, 2025, 4:09:04 PM</td>
+            <td>Feb 14, 2025, 4:55:16 AM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-50567, https://fortiguard.fortinet.com/psirt/FG-IR-24-438, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2024-24974</td>
+            <td>CVE-2024-27781, GSD-2024-27781, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.9</td>
+            <td>0.13</td>
+            <td>FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox, FortiSandbox</td>
+            <td>Fortinet</td>
+            <td>Feb 14, 2025, 4:55:15 AM</td>
+            <td>An improper neutralization of input during web page generation ('cross-site scripting') in Fortinet FortiSandbox at least versions 4.4.0 through 4.4.4 and 4.2.0 through 4.2.6 and 4.0.0 through 4.0.4 and 3.2.0 through 3.2.4 and 3.1.0 through 3.1.5 and 3.0.0 through 3.0.7 allows an authenticated attacker to execute unauthorized code or commands via crafted HTTP requests.</td>
+            <td>4.2.0 ≤4.2.6, 4.0.0 ≤4.0.4, 3.1.0 ≤3.1.5, 4.4.0 ≤4.4.4, 3.0.0 ≤3.0.7, 3.2.0 ≤3.2.4</td>
+            <td>Feb 11, 2025, 4:09:12 PM</td>
+            <td>Feb 14, 2025, 4:55:15 AM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-27781, https://fortiguard.fortinet.com/psirt/FG-IR-24-063, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2023-48612</td>
+            <td>CVE-2023-44253, GSD-2023-44253, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.7</td>
+            <td>0.19</td>
+            <td>FortiAnalyzer, FortiManager, FortiManager, FortiAnalyzer, FortiManager, FortiAnalyzer, FortiAnalyzer, FortiManager, FortiAnalyzer, FortiManager</td>
+            <td>Fortinet</td>
+            <td>Feb 13, 2025, 5:13:34 PM</td>
+            <td>An exposure of sensitive information to an unauthorized actor vulnerability [CWE-200] in Fortinet FortiManager version 7.4.0 through 7.4.1 and before 7.2.5, FortiAnalyzer version 7.4.0 through 7.4.1 and before 7.2.5 and FortiAnalyzer-BigData before 7.2.5 allows an adom administrator to enumerate other adoms and device names via crafted HTTP or HTTPS requests.</td>
+            <td>7.2.0 ≤7.2.3, 6.2.0 ≤6.2.12, 7.2.0 ≤7.2.3, 6.2.0 ≤6.2.12, 7.4.0 ≤7.4.1, 7.0.0 ≤7.0.11, 6.4.0 ≤6.4.14, 7.0.0 ≤7.0.11, 7.4.0 ≤7.4.1, 6.4.0 ≤6.4.14</td>
+            <td>Feb 15, 2024, 1:59:24 PM</td>
+            <td>Feb 13, 2025, 5:13:34 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-268, https://github.com/orangecertcc/security-research/security/advisories/GHSA-25j8-69h7-83h2, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2023-48608</td>
+            <td>CVE-2023-44249, GSD-2023-44249, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.1</td>
+            <td>0.15</td>
+            <td>FortiAnalyzer, FortiManager, FortiManager, FortiAnalyzer, FortiAnalyzer, FortiAnalyzer, FortiManager, FortiManager, FortiManager, FortiAnalyzer</td>
+            <td>Fortinet</td>
+            <td>Feb 13, 2025, 5:13:33 PM</td>
+            <td>An authorization bypass through user-controlled key [CWE-639] vulnerability in Fortinet FortiManager version 7.4.0 and before 7.2.3 and FortiAnalyzer version 7.4.0 and before 7.2.3 allows a remote attacker with low privileges to read sensitive information via crafted HTTP requests.</td>
+            <td>7.2.0 ≤7.2.3, 7.2.0 ≤7.2.3, 7.4.0, 6.4.0 ≤6.4.13, 6.2.0 ≤6.2.12, 7.4.0, 6.4.0 ≤6.4.13, 7.0.0 ≤7.0.9, 6.2.0 ≤6.2.12, 7.0.0 ≤7.0.9</td>
+            <td>Oct 10, 2023, 4:48:38 PM</td>
+            <td>Feb 13, 2025, 5:13:33 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-201, https://github.com/orangecertcc/security-research/security/advisories/GHSA-x8rp-jfwc-gqqj, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2023-47218</td>
+            <td>CVE-2023-42788, GSD-2023-42788, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.6</td>
+            <td>0.29</td>
+            <td>FortiManager, FortiAnalyzer, FortiAnalyzer, FortiManager, FortiAnalyzer, FortiManager, FortiManager, FortiManager, FortiAnalyzer, FortiAnalyzer</td>
+            <td>Fortinet</td>
+            <td>Feb 13, 2025, 5:09:42 PM</td>
+            <td>An improper neutralization of special elements used in an os command ('OS Command Injection') vulnerability [CWE-78] in FortiManager & FortiAnalyzer version 7.4.0, version 7.2.0 through 7.2.3, version 7.0.0 through 7.0.8, version 6.4.0 through 6.4.12 and version 6.2.0 through 6.2.11 may allow a local attacker with low privileges to execute unauthorized code via specifically crafted arguments to a CLI command</td>
+            <td>7.0.0 ≤7.0.8, 7.4.0, 6.4.0 ≤6.4.12, 7.4.0, 7.2.0 ≤7.2.3, 6.4.0 ≤6.4.12, 7.2.0 ≤7.2.3, 6.2.0 ≤6.2.11, 7.0.0 ≤7.0.8, 6.2.0 ≤6.2.11</td>
+            <td>Oct 10, 2023, 4:48:56 PM</td>
+            <td>Feb 13, 2025, 5:09:42 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-167, https://github.com/orangecertcc/security-research/security/advisories/GHSA-qpv8-g6qv-rf8p, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2023-47217</td>
+            <td>CVE-2023-42787, GSD-2023-42787, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.2</td>
+            <td>0.75</td>
+            <td>FortiManager, FortiAnalyzer, FortiAnalyzer, FortiAnalyzer, FortiManager, FortiAnalyzer, FortiManager, FortiManager, FortiManager, FortiAnalyzer</td>
+            <td>Fortinet</td>
+            <td>Feb 13, 2025, 5:09:41 PM</td>
+            <td>A client-side enforcement of server-side security [CWE-602] vulnerability in Fortinet FortiManager version 7.4.0 and before 7.2.3 and FortiAnalyzer version 7.4.0 and before 7.2.3 may allow a remote attacker with low privileges to access a privileged web console via client side code execution.</td>
+            <td>7.2.0 ≤7.2.3, 6.4.0 ≤6.4.13, 6.2.0 ≤6.2.12, 7.2.0 ≤7.2.3, 7.0.0 ≤7.0.9, 7.4.0, 7.4.0, 6.2.0 ≤6.2.12, 6.4.0 ≤6.4.13, 7.0.0 ≤7.0.9</td>
+            <td>Oct 10, 2023, 4:48:46 PM</td>
+            <td>Feb 13, 2025, 5:09:41 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-23-187, https://github.com/orangecertcc/security-research/security/advisories/GHSA-q5pq-8666-j8fr, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2022-44540</td>
+            <td>CVE-2022-41333, GSD-2022-41333, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.8</td>
+            <td>8.39</td>
+            <td>FortiRecorder, FortiRecorder</td>
+            <td>Fortinet</td>
+            <td>Feb 13, 2025, 4:33:04 PM</td>
+            <td>An uncontrolled resource consumption vulnerability [CWE-400] in FortiRecorder version 6.4.3 and below, 6.0.11 and below login authentication mechanism may allow an unauthenticated attacker to make the device unavailable via crafted GET requests.</td>
+            <td>6.0.0 ≤6.0.11, 6.4.0 ≤6.4.3</td>
+            <td>Mar 7, 2023, 4:04:43 PM</td>
+            <td>Feb 13, 2025, 4:33:04 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-22-388, http://packetstormsecurity.com/files/171766/FortiRecorder-6.4.3-Denial-Of-Service.html, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-4974</td>
+            <td>CVE-2024-40584, GHSA-x763-rwjp-4g28, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.8</td>
+            <td>0.4</td>
+            <td>FortiManager, FortiAnalyzer, FortiManager, FortiAnalyzer, FortiAnalyzer, FortiAnalyzer, FortiManager, FortiAnalyzer, FortiManager, FortiManager</td>
+            <td>Fortinet</td>
+            <td>Feb 12, 2025, 3:53:33 PM</td>
+            <td>An improper neutralization of special elements used in an OS command ('OS Command Injection') vulnerability [CWE-78] in Fortinet FortiAnalyzer version 7.4.0 through 7.4.3, 7.2.0 through 7.2.5, 7.0.0 through 7.0.13, 6.4.0 through 6.4.15 and 6.2.2 through 6.2.13, Fortinet FortiManager version 7.4.0 through 7.4.3, 7.2.0 through 7.2.5, 7.0.0 through 7.0.13, 6.4.0 through 6.4.15 and 6.2.2 through 6.2.13, Fortinet FortiAnalyzer BigData version 7.4.0, 7.2.0 through 7.2.7, 7.0.1 through 7.0.6, 6.4.5 through 6.4.7 and 6.2.5, Fortinet FortiAnalyzer Cloud version 7.4.1 through 7.4.3, 7.2.1 through 7.2.5, 7.0.1 through 7.0.13 and 6.4.1 through 6.4.7 and Fortinet FortiManager Cloud version 7.4.1 through 7.4.3, 7.2.1 through 7.2.5, 7.0.1 through 7.0.13 and 6.4.1 through 6.4.7 GUI allows an authenticated privileged attacker to execute unauthorized code or commands via crafted HTTPS or HTTP requests.</td>
+            <td>7.4.0 ≤7.4.3, 7.0.0 ≤7.0.13, 7.0.0 ≤7.0.13, 6.2.2 ≤6.2.13, 7.2.0 ≤7.2.5, 6.4.0 ≤6.4.15, 7.2.0 ≤7.2.5, 7.4.0 ≤7.4.3, 6.2.2 ≤6.2.13, 6.4.0 ≤6.4.15</td>
+            <td>Feb 11, 2025, 4:09:07 PM</td>
+            <td>Feb 12, 2025, 3:53:33 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-40584, https://fortiguard.fortinet.com/psirt/FG-IR-24-220, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-4979</td>
+            <td>CVE-2024-36508, GHSA-7w3h-vqp8-323r, </td>
+            <td>Not available</td>
+            <td>v3.1: 5.9</td>
+            <td>0.07</td>
+            <td>FortiAnalyzer, FortiAnalyzer, FortiAnalyzer, FortiManager, FortiAnalyzer, FortiManager, FortiManager, FortiManager</td>
+            <td>Fortinet</td>
+            <td>Feb 12, 2025, 3:53:19 PM</td>
+            <td>An improper limitation of a pathname to a restricted directory ('Path Traversal') vulnerability [CWE-22] in Fortinet FortiManager version 7.4.0 through 7.4.2 and before 7.2.5 and Fortinet FortiAnalyzer version 7.4.0 through 7.4.2 and before 7.2.5 CLI allows an authenticated admin user with diagnose privileges to delete files on the system.</td>
+            <td>7.0.0 ≤7.0.13, 7.4.0 ≤7.4.2, 7.2.0 ≤7.2.5, 7.0.0 ≤7.0.13, 6.4.0 ≤6.4.15, 7.4.0 ≤7.4.2, 6.4.0 ≤6.4.15, 7.2.0 ≤7.2.5</td>
+            <td>Feb 11, 2025, 4:09:07 PM</td>
+            <td>Feb 12, 2025, 3:53:19 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-36508, https://fortiguard.fortinet.com/psirt/FG-IR-24-147, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-4983</td>
+            <td>CVE-2024-40586, GHSA-89gg-gc7x-gwhp, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.3</td>
+            <td>0.02</td>
+            <td>FortiClientWindows, FortiClientWindows, FortiClientWindows</td>
+            <td>Fortinet</td>
+            <td>Feb 12, 2025, 3:53:08 PM</td>
+            <td>An Improper Access Control vulnerability [CWE-284] in FortiClient Windows version 7.4.0, version 7.2.6 and below, version 7.0.13 and below may allow a local user to escalate his privileges via FortiSSLVPNd service pipe.</td>
+            <td>7.4.0, 7.0.3 ≤7.0.13, 7.2.0 ≤7.2.6</td>
+            <td>Feb 11, 2025, 4:09:06 PM</td>
+            <td>Feb 12, 2025, 3:53:08 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-40586, https://fortiguard.fortinet.com/psirt/FG-IR-23-279, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2023-45275</td>
+            <td>CVE-2023-40721, GSD-2023-40721, </td>
+            <td>Not available</td>
+            <td>v3.1: 6.3</td>
+            <td>0.02</td>
+            <td>FortiPAM, FortiOS, FortiProxy, FortiProxy, FortiOS, FortiSwitchManager, FortiOS, FortiPAM, FortiProxy, FortiSwitchManager, FortiOS, FortiProxy, FortiProxy, FortiOS</td>
+            <td>Fortinet</td>
+            <td>Feb 12, 2025, 3:52:51 PM</td>
+            <td>A use of externally-controlled format string vulnerability [CWE-134] in Fortinet FortiOS version 7.4.0 through 7.4.1 and before 7.2.6, FortiProxy version 7.4.0 and before 7.2.7, FortiPAM version 1.1.2 and before 1.0.3, FortiSwitchManager version 7.2.0 through 7.2.2 and before 7.0.2 allows a privileged attacker to execute arbitrary code or commands via specially crafted requests.</td>
+            <td>1.1.0 ≤1.1.2, 7.4.0, 2.0.0 ≤2.0.14, 1.2.0 ≤1.2.13, 6.2.0 ≤6.2.16, 7.2.0 ≤7.2.2, 7.0.0 ≤7.0.13, 1.0.0 ≤1.0.3, 7.4.0, 7.0.0 ≤7.0.2, 7.2.0 ≤7.2.5, 7.0.0 ≤7.0.14, 7.2.0 ≤7.2.6, 6.4.0 ≤6.4.15</td>
+            <td>Feb 11, 2025, 4:09:06 PM</td>
+            <td>Feb 12, 2025, 3:52:51 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2023-40721, https://fortiguard.com/psirt/FG-IR-23-261, </td>
+        </tr>
+        
+        <tr class="low-risk">
+            <td>EUVD-2025-4976</td>
+            <td>CVE-2024-52966, GHSA-hpjc-rrq5-mqv8, </td>
+            <td>Not available</td>
+            <td>v3.1: 2.2</td>
+            <td>0.02</td>
+            <td>FortiAnalyzer, FortiAnalyzer, FortiAnalyzer, FortiAnalyzer, FortiAnalyzer</td>
+            <td>Fortinet</td>
+            <td>Feb 12, 2025, 3:52:16 PM</td>
+            <td>An exposure of sensitive information to an unauthorized actor in Fortinet FortiAnalyzer 6.4.0 through 7.6.0 allows attacker to cause information disclosure via filter manipulation.</td>
+            <td>7.6.0, 6.4.0 ≤6.4.15, 7.4.0 ≤7.4.4, 7.2.0 ≤7.2.7, 7.0.0 ≤7.0.13</td>
+            <td>Feb 11, 2025, 4:09:01 PM</td>
+            <td>Feb 12, 2025, 3:52:16 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-52966, https://fortiguard.fortinet.com/psirt/FG-IR-24-422, </td>
+        </tr>
+        
+        <tr class="low-risk">
+            <td>EUVD-2024-24973</td>
+            <td>CVE-2024-27780, GSD-2024-27780, </td>
+            <td>Not available</td>
+            <td>v3.1: 2.2</td>
+            <td>0.03</td>
+            <td>FortiSIEM, FortiSIEM, FortiSIEM</td>
+            <td>Fortinet</td>
+            <td>Feb 12, 2025, 3:40:18 PM</td>
+            <td>Multiple Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerabilities [CWE-79] in FortiSIEM  7.1 all versions, 7.0 all versions, 6.7 all versions incident page may allow an authenticated attacker to perform a cross-site scripting attack via crafted HTTP requests.</td>
+            <td>7.1.0 ≤7.1.7, 6.7.0 ≤6.7.9, 7.0.0 ≤7.0.3</td>
+            <td>Feb 11, 2025, 4:09:12 PM</td>
+            <td>Feb 12, 2025, 3:40:18 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-27780, https://fortiguard.fortinet.com/psirt/FG-IR-23-324, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2025-3724</td>
+            <td>CVE-2025-24470, </td>
+            <td>Not available</td>
+            <td>v3.1: 8.1</td>
+            <td>0.3</td>
+            <td>FortiPortal, FortiPortal, FortiPortal</td>
+            <td>Fortinet</td>
+            <td>Feb 11, 2025, 4:43:10 PM</td>
+            <td>An Improper Resolution of Path Equivalence vulnerability [CWE-41] in FortiPortal 7.4.0 through 7.4.2, 7.2.0 through 7.2.6, 7.0.0 through 7.0.11 may allow a remote unauthenticated attacker to retrieve source code via crafted HTTP requests.</td>
+            <td>7.4.0 ≤7.4.2, 7.0.0 ≤7.0.11, 7.2.0 ≤7.2.6</td>
+            <td>Feb 11, 2025, 4:08:58 PM</td>
+            <td>Feb 11, 2025, 4:43:10 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-25-015, https://nvd.nist.gov/vuln/detail/CVE-2025-24470, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2025-4977</td>
+            <td>CVE-2024-52968, GHSA-h55v-j7qg-4vf6, </td>
+            <td>Not available</td>
+            <td>v3.1: 5.8</td>
+            <td>0.05</td>
+            <td>FortiClientMac, FortiClientMac, FortiClientMac</td>
+            <td>Fortinet</td>
+            <td>Feb 11, 2025, 4:35:11 PM</td>
+            <td>An improper authentication in Fortinet FortiClientMac 7.0.11 through 7.2.4 allows attacker to gain improper access to MacOS via empty password.</td>
+            <td>7.4.0, 7.2.3 ≤7.2.4, 7.0.11 ≤7.0.12</td>
+            <td>Feb 11, 2025, 4:09:00 PM</td>
+            <td>Feb 11, 2025, 4:35:11 PM</td>
+            <td>https://nvd.nist.gov/vuln/detail/CVE-2024-52968, https://fortiguard.fortinet.com/psirt/FG-IR-24-300, </td>
+        </tr>
+        
+        <tr class="low-risk">
+            <td>EUVD-2024-31242</td>
+            <td>CVE-2024-33504, GSD-2024-33504, </td>
+            <td>Not available</td>
+            <td>v3.1: 3.9</td>
+            <td>0.02</td>
+            <td>FortiManager, FortiManager, FortiManager, FortiManager, FortiManager</td>
+            <td>Fortinet</td>
+            <td>Feb 11, 2025, 4:32:53 PM</td>
+            <td>A use of hard-coded cryptographic key to encrypt sensitive data vulnerability [CWE-321] in FortiManager 7.6.0 through 7.6.1, 7.4.0 through 7.4.5, 7.2.0 through 7.2.9, 7.0 all versions, 6.4 all versions may allow an attacker with JSON API access permissions to decrypt some secrets even if the 'private-data-encryption' setting is enabled.</td>
+            <td>7.4.0 ≤7.4.5, 7.2.0 ≤7.2.9, 7.0.0 ≤7.0.13, 7.6.0 ≤7.6.1, 6.4.0 ≤6.4.15</td>
+            <td>Feb 11, 2025, 4:09:03 PM</td>
+            <td>Feb 11, 2025, 4:32:53 PM</td>
+            <td>https://github.com/orangecertcc/security-research/security/advisories/GHSA-pgc3-m5p5-4vc3, https://nvd.nist.gov/vuln/detail/CVE-2024-33504, https://fortiguard.fortinet.com/psirt/FG-IR-24-094, </td>
+        </tr>
+        
+        <tr class="critical-risk">
+            <td>EUVD-2024-52819</td>
+            <td>CVE-2024-55591, </td>
+            <td>Not available</td>
+            <td>v3.1: 9.6</td>
+            <td>93.01</td>
+            <td>FortiOS, FortiProxy, FortiProxy</td>
+            <td>Fortinet</td>
+            <td>Jan 23, 2025, 4:55:42 AM</td>
+            <td>An Authentication Bypass Using an Alternate Path or Channel vulnerability [CWE-288] affecting FortiOS version 7.0.0 through 7.0.16 and FortiProxy version 7.0.0 through 7.0.19 and 7.2.0 through 7.2.12 allows a remote attacker to gain super-admin privileges via crafted requests to Node.js websocket module.</td>
+            <td>7.0.0 ≤7.0.16, 7.2.0 ≤7.2.12, 7.0.0 ≤7.0.19</td>
+            <td>Jan 14, 2025, 2:08:34 PM</td>
+            <td>Jan 23, 2025, 4:55:42 AM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-535, </td>
+        </tr>
+        
+        <tr class="medium-risk">
+            <td>EUVD-2022-28514</td>
+            <td>CVE-2022-23439, GSD-2022-23439, </td>
+            <td>Not available</td>
+            <td>v3.1: 4.1</td>
+            <td>0.07</td>
+            <td>FortiMail, FortiSwitch, FortiOS, FortiAuthenticator, FortiADC, FortiADC, FortiSOAR, FortiTester, FortiNDR, FortiSOAR, FortiManager, FortiManager, FortiSOAR, FortiVoice, FortiAnalyzer, FortiADC, FortiDDoS, FortiDDoS-F, FortiTester, FortiTester, FortiTester, FortiTester, FortiNDR, FortiWLC, FortiMail, FortiDDoS, FortiAuthenticator, FortiProxy, FortiRecorder, FortiOS, FortiManager, FortiRecorder, FortiProxy, FortiAnalyzer, FortiTester, FortiADC, FortiNDR, FortiDDoS, FortiADC, FortiAnalyzer, FortiMail, FortiManager, FortiSwitch, FortiOS, FortiDDoS, FortiAuthenticator, FortiMail, FortiDDoS, FortiNDR, FortiDDoS-F, FortiAuthenticator, FortiNDR, FortiWLC, FortiRecorder, FortiADC, FortiWLC, FortiTester, FortiNDR, FortiMail, FortiDDoS, FortiAnalyzer, FortiADC, FortiTester, FortiADC, FortiOS, FortiDDoS, FortiAuthenticator, FortiWLC, FortiSwitch, FortiAnalyzer, FortiNDR, FortiAuthenticator, FortiVoice, FortiTester, FortiPortal, FortiTester, FortiTester, FortiAuthenticator, FortiProxy, FortiRecorder, FortiAuthenticator, FortiOS, FortiSwitch, FortiAuthenticator, FortiSOAR, FortiVoice, FortiDDoS-F, FortiOS, FortiManager, FortiTester, FortiADC, FortiAuthenticator, FortiDDoS, FortiProxy, FortiTester, FortiMail, FortiProxy, FortiNDR, FortiDDoS</td>
+            <td>Fortinet</td>
+            <td>Jan 22, 2025, 2:21:36 PM</td>
+            <td>A externally controlled reference to a resource in another sphere in Fortinet FortiManager before version 7.4.3, FortiMail before version 7.0.3, FortiAnalyzer before version 7.4.3, FortiVoice version 7.0.0, 7.0.1 and before 6.4.8, FortiProxy before version 7.0.4, FortiRecorder version 6.4.0 through 6.4.2 and before 6.0.10, FortiAuthenticator version 6.4.0 through 6.4.1 and before 6.3.3, FortiNDR version 7.2.0 before 7.1.0, FortiWLC before version 8.6.4, FortiPortal before version 6.0.9, FortiOS version 7.2.0 and before 7.0.5, FortiADC version 7.0.0 through 7.0.1 and before 6.2.3 , FortiDDoS before version 5.5.1, FortiDDoS-F before version 6.3.3, FortiTester before version 7.2.1, FortiSOAR before version 7.2.2 and FortiSwitch before version 6.3.3 allows attacker to poison web caches via crafted HTTP requests, where the `Host` header points to an arbitrary webserver</td>
+            <td>7.2.0 <7.2.*, 6.4.0 ≤6.4.10, 6.4.0 ≤6.4.15, 5.2.0 ≤5.2.2, 6.2.0 ≤6.2.3, 5.1.0 ≤5.1.7, 7.0.0 ≤7.0.3, 7.2.0 ≤7.2.1, 7.1.0, 7.2.0 ≤7.2.2, 7.0.0 ≤7.0.13, 6.2.0 ≤6.2.13, 6.4.0 ≤6.4.1, 7.0.0 ≤7.0.1, 7.4.0 ≤7.4.2, 5.2.0 ≤5.2.8, 4.6.0, 6.1.0 ≤6.1.5, 4.1.0 ≤4.1.1, 3.6.0, 3.3.0 ≤3.3.1, 3.4.0, 1.4.0, 8.4.4 ≤8.4.8, 6.0.0 ≤6.0.12, 4.5.0, 5.1.0 ≤5.1.2, 1.0.0 ≤1.0.7, 6.0.0 ≤6.0.10, 7.0.0 ≤7.0.5, 7.2.0 ≤7.2.9, 6.4.0 ≤6.4.2, 7.0.0 ≤7.0.4, 6.2.0 ≤6.2.13, 3.7.0 ≤3.7.1, 6.0.0 ≤6.0.4, 7.0.0 ≤7.0.6, 5.3.0 ≤5.3.2, 5.3.0 ≤5.3.7, 6.4.0 ≤6.4.15, 6.4.0 ≤6.4.8, 7.4.0 ≤7.4.3, 6.0.0 ≤6.0.7, 6.2.0 ≤6.2.16, 5.0.0, 6.0.0 ≤6.0.8, 7.0.0 ≤7.0.3, 5.4.0 ≤5.4.3, 1.5.0 ≤1.5.3, 6.3.0 ≤6.3.3, 5.4.0 ≤5.4.1, 1.3.0 ≤1.3.1, 8.5.0 ≤8.5.5, 2.7.0 ≤2.7.7, 7.0.0 ≤7.0.1, 8.4.0 ≤8.4.2, 4.0.0, 1.2.0, 5.4.0 ≤5.4.12, 5.5.0 ≤5.5.1, 7.0.0 ≤7.0.13, 6.1.0 ≤6.1.6, 3.5.0 ≤3.5.1, 5.0.0 ≤5.0.4, 7.2.0, 5.1.0, 5.3.0 ≤5.3.1, 8.6.0 ≤8.6.7, 6.2.0 ≤6.2.8, 7.2.0 ≤7.2.9, 7.2.0, 6.4.0 ≤6.4.1, 6.4.0 ≤6.4.8, 3.9.0 ≤3.9.2, 6.0.0 ≤6.0.9, 3.8.0, 7.1.0 ≤7.1.1, 6.1.0 ≤6.1.3, 1.1.0 ≤1.1.6, 2.6.0 ≤2.6.3, 5.5.0, 6.4.0 <6.4.*, 7.0.0 ≤7.0.4, 6.3.0 ≤6.3.3, 6.4.3 ≤6.4.4, 6.0.0 ≤6.0.11, 6.2.0 ≤6.2.3, 6.0.0 ≤6.0.18, 6.4.0 ≤6.4.15, 4.2.0 ≤4.2.1, 5.4.0 ≤5.4.5, 6.2.0 ≤6.2.2, 4.7.0, 2.0.0 ≤2.0.14, 7.0.0, 6.2.0 ≤6.2.9, 1.2.0 ≤1.2.13, 1.1.0, 5.2.0</td>
+            <td>Jan 22, 2025, 9:10:28 AM</td>
+            <td>Jan 22, 2025, 2:21:36 PM</td>
+            <td>https://fortiguard.com/psirt/FG-IR-21-254, </td>
+        </tr>
+        
+        <tr class="high-risk">
+            <td>EUVD-2024-43232</td>
+            <td>CVE-2024-48884, </td>
+            <td>Not available</td>
+            <td>v3.1: 7.1</td>
+            <td>0.06</td>
+            <td>FortiOS, FortiProxy, FortiOS, FortiProxy, FortiOS, FortiOS, FortiProxy, FortiOS, FortiProxy, FortiProxy, FortiProxy, FortiManager, FortiProxy, FortiManager</td>
+            <td>Fortinet</td>
+            <td>Jan 16, 2025, 4:15:35 PM</td>
+            <td>A improper limitation of a pathname to a restricted directory ('path traversal') in Fortinet FortiManager versions 7.6.0 through 7.6.1, 7.4.1 through 7.4.3, FortiOS versions 7.6.0, 7.4.0 through 7.4.4, 7.2.5 through 7.2.9, 7.0.0 through 7.0.15, 6.4.0 through 6.4.15, FortiProxy 7.4.0 through 7.4.5, 7.2.0 through 7.2.11, 7.0.0 through 7.0.18, 2.0.0 through 2.0.14, 1.2.0 through 1.2.13, 1.1.0 through 1.1.6, 1.0.0 through 1.0.7, FortiManager Cloud versions 7.4.1 through 7.4.3 allows attacker to trigger an escalation of privilege via specially crafted packets.</td>
+            <td>7.0.0 ≤7.0.15, 7.0.0 ≤7.0.18, 7.6.0, 1.1.0 ≤1.1.6, 7.2.0 ≤7.2.9, 7.4.0 ≤7.4.4, 2.0.0 ≤2.0.14, 6.4.0 ≤6.4.15, 1.0.0 ≤1.0.7, 7.2.0 ≤7.2.11, 7.4.0 ≤7.4.5, 7.6.0 ≤7.6.1, 1.2.0 ≤1.2.13, 7.4.1 ≤7.4.3</td>
+            <td>Jan 14, 2025, 2:09:26 PM</td>
+            <td>Jan 16, 2025, 4:15:35 PM</td>
+            <td>https://fortiguard.fortinet.com/psirt/FG-IR-24-259, </td>
+        </tr>
+        
+    </tbody>
+    </table>
+    <script>
+        let vendorFilter = document.getElementById("vendorFilter");
+        let productFilter = document.getElementById("productFilter");
+    vendorFilter.innerHTML += `<option value="Fortinet">Fortinet</option>`;
+productFilter.innerHTML += `<option value="FortiADC">FortiADC</option>`;
+productFilter.innerHTML += `<option value="FortiAnalyzer">FortiAnalyzer</option>`;
+productFilter.innerHTML += `<option value="FortiAuthenticator">FortiAuthenticator</option>`;
+productFilter.innerHTML += `<option value="FortiCamera">FortiCamera</option>`;
+productFilter.innerHTML += `<option value="FortiClientEMS">FortiClientEMS</option>`;
+productFilter.innerHTML += `<option value="FortiClientMac">FortiClientMac</option>`;
+productFilter.innerHTML += `<option value="FortiClientWindows">FortiClientWindows</option>`;
+productFilter.innerHTML += `<option value="FortiDDoS">FortiDDoS</option>`;
+productFilter.innerHTML += `<option value="FortiDDoS-CM">FortiDDoS-CM</option>`;
+productFilter.innerHTML += `<option value="FortiDDoS-F">FortiDDoS-F</option>`;
+productFilter.innerHTML += `<option value="FortiIsolator">FortiIsolator</option>`;
+productFilter.innerHTML += `<option value="FortiMail">FortiMail</option>`;
+productFilter.innerHTML += `<option value="FortiManager">FortiManager</option>`;
+productFilter.innerHTML += `<option value="FortiNAC">FortiNAC</option>`;
+productFilter.innerHTML += `<option value="FortiNAC-F">FortiNAC-F</option>`;
+productFilter.innerHTML += `<option value="FortiNDR">FortiNDR</option>`;
+productFilter.innerHTML += `<option value="FortiOS">FortiOS</option>`;
+productFilter.innerHTML += `<option value="FortiOS-6K7K">FortiOS-6K7K</option>`;
+productFilter.innerHTML += `<option value="FortiPAM">FortiPAM</option>`;
+productFilter.innerHTML += `<option value="FortiPortal">FortiPortal</option>`;
+productFilter.innerHTML += `<option value="FortiProxy">FortiProxy</option>`;
+productFilter.innerHTML += `<option value="FortiRecorder">FortiRecorder</option>`;
+productFilter.innerHTML += `<option value="FortiSIEM">FortiSIEM</option>`;
+productFilter.innerHTML += `<option value="FortiSOAR">FortiSOAR</option>`;
+productFilter.innerHTML += `<option value="FortiSRA">FortiSRA</option>`;
+productFilter.innerHTML += `<option value="FortiSandbox">FortiSandbox</option>`;
+productFilter.innerHTML += `<option value="FortiSwitch">FortiSwitch</option>`;
+productFilter.innerHTML += `<option value="FortiSwitchManager">FortiSwitchManager</option>`;
+productFilter.innerHTML += `<option value="FortiTester">FortiTester</option>`;
+productFilter.innerHTML += `<option value="FortiVoice">FortiVoice</option>`;
+productFilter.innerHTML += `<option value="FortiVoiceUCDesktop">FortiVoiceUCDesktop</option>`;
+productFilter.innerHTML += `<option value="FortiWLC">FortiWLC</option>`;
+productFilter.innerHTML += `<option value="FortiWeb">FortiWeb</option>`;
+productFilter.innerHTML += `<option value="Fortinet FortiClient for Windows">Fortinet FortiClient for Windows</option>`;
+
+    </script>
+    </body>
+    </html>
+    
