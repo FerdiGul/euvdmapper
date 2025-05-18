@@ -57,6 +57,8 @@ watchlist:
     product: FortiOS
   - vendor: Cisco
     product: IOS
+```
+---
 
 ## 📦 Installation
 
@@ -65,6 +67,7 @@ You can install **euvdmapper** directly from [PyPI](https://pypi.org/project/euv
 
 ```bash
 pip install euvdmapper
+```
 
 ** Install from source:
 
@@ -72,6 +75,7 @@ pip install euvdmapper
 git clone https://github.com/FerdiGul/euvdmapper.git
 cd euvdmapper
 pip install .
+```
 ---
 
 ## 🚀 Usage
