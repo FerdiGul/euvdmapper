@@ -24,8 +24,8 @@ Output results as `.json`, `.csv`, or interactive `.html` reports.
 🧠 **Smart HTML Reporting**  
 - CVSS-based risk coloring (Low / Medium / High / Critical)  
 - Filter by vendor, product, or CVSS score  
-- In-browser search and printable layout
-
+- In-browser search and the ability to export reports in PDF format.
+  
 🔎 **Lookup Utilities**  
 - Search by CVE ID or EUVD ID  
 - Get alias mappings and extended metadata
