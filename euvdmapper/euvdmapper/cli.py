@@ -277,8 +277,7 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="euvdmapper",
-        description="""EUVD Mapper - ENISA EUVD Data Retriever and Formatter\n
-                           @Developed by Ferdi Gül | @Github: /FerdiGul""",
+        description="",
         epilog=epilog_text,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
