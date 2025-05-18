@@ -9,7 +9,7 @@
 > ⚙️ ENISA EUVD Data Retriever and Formatter  
 > Fetch, filter, and format data from ENISA’s Exploited Vulnerabilities Database (EUVD) with ease.
 
-<img width="505" alt="cover" src="https://github.com/user-attachments/assets/f856c9cb-eab2-48fe-97c5-48f71467faa6" />
+<img width="705" alt="cover" src="https://github.com/user-attachments/assets/f40d6f8a-c7ee-4550-a790-1759942df181" />
 
 ---
 
