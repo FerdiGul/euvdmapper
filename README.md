@@ -150,6 +150,11 @@ euvdmapper --input watchlist.yaml --alerts
 <img width="1445" alt="IMG1" src="https://github.com/user-attachments/assets/2f18cd03-bcbd-4cce-8a8c-12379da595ab" />
 
 
+
+https://github.com/user-attachments/assets/ff7c6fad-a526-44b1-9711-40b2faa568e0
+
+
+
 ---
 
 ## 🙋‍♂️ Author
