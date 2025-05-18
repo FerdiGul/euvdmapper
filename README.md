@@ -66,7 +66,6 @@ You can install **euvdmapper** directly from [PyPI](https://pypi.org/project/euv
 
 ```bash
 pip install euvdmapper
-```
 
 ** Install from source:
 
