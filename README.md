@@ -4,6 +4,7 @@
 ![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)
 ![PyPI version](https://img.shields.io/pypi/v/euvdmapper)
 [![Downloads](https://img.shields.io/pypi/dm/euvdmapper)](https://pypi.org/project/euvdmapper/)
+![PyPI - Total Downloads](https://img.shields.io/pypi/dt/euvdmapper)
 
 
 > ⚙️ ENISA EUVD Data Retriever and Formatter  
