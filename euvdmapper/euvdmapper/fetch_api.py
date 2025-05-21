@@ -9,7 +9,7 @@ async def fetch_euvd_entries(keyword=None, vendor=None, product=None, max_entrie
     tasks = []
 
     async with httpx.AsyncClient() as client:
-        # İlk sayfa isteği: totalElements bilgisini öğrenmek için
+    
         try:
             url = f"{API_BASE}/vulnerabilities"
             params = {"page": 0, "size": page_size}
@@ -30,12 +30,12 @@ async def fetch_euvd_entries(keyword=None, vendor=None, product=None, max_entrie
             print(f"[ERROR] Initial page fetch failed: {e}")
             return []
 
-        # Gerekli sayfa sayısını hesapla
+        
         total_pages = (total_items + page_size - 1) // page_size
         if max_entries:
             total_pages = min(total_pages, (max_entries + page_size - 1) // page_size)
 
-        # Kalan sayfalar için görevleri oluştur
+      
         for page in range(1, total_pages):
             params_page = {"page": page, "size": page_size}
             if keyword:
@@ -91,10 +91,10 @@ async def lookup_euvd(euvd_id: str):
             if vuln_id:
                 aliases.add(vuln_id)
 
-        # Ana objeye ekle
+        # Add to main object
         data["aliases"] = ", ".join(sorted(aliases))
 
-        # Gereksiz alanları sil
+        # Delete unnecessary fields
         data.pop("enisaIdVulnerability", None)
         data.pop("enisaIdAdvisory", None)
 
