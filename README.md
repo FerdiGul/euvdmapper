@@ -1,5 +1,7 @@
 # EUVD Mapper v1.4
 
+# Note: Development of updates and new features for version 1.5 is ongoing.#
+
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)
 ![PyPI version](https://img.shields.io/pypi/v/euvdmapper)
