@@ -1,6 +1,6 @@
 # EUVD Mapper v1.4
 
-# Note: Development of updates and new features for version 1.5 is ongoing.#
+# Note: Development of updates and new features for version 1.5 is ongoing. v1.5 Release date: No later than June 20, 2025.
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)
