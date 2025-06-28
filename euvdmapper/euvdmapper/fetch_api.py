@@ -3,15 +3,15 @@ import asyncio
 
 API_BASE = "https://euvdservices.enisa.europa.eu/api"
 
+
 async def fetch_euvd_entries(keyword=None, vendor=None, product=None, max_entries=None):
     entries = []
     page_size = 100
     tasks = []
 
     async with httpx.AsyncClient() as client:
-    
         try:
-            url = f"{API_BASE}/vulnerabilities"
+            url = f"{API_BASE}/search"
             params = {"page": 0, "size": page_size}
             if keyword:
                 params["text"] = keyword
@@ -30,12 +30,10 @@ async def fetch_euvd_entries(keyword=None, vendor=None, product=None, max_entrie
             print(f"[ERROR] Initial page fetch failed: {e}")
             return []
 
-        
         total_pages = (total_items + page_size - 1) // page_size
         if max_entries:
             total_pages = min(total_pages, (max_entries + page_size - 1) // page_size)
 
-      
         for page in range(1, total_pages):
             params_page = {"page": page, "size": page_size}
             if keyword:
@@ -56,7 +54,7 @@ async def fetch_euvd_entries(keyword=None, vendor=None, product=None, max_entrie
 
 
 async def fetch_page(client, params):
-    url = f"{API_BASE}/vulnerabilities"
+    url = f"{API_BASE}/search"
     try:
         response = await client.get(url, params=params, timeout=30)
         response.raise_for_status()
@@ -67,13 +65,25 @@ async def fetch_page(client, params):
 
 
 async def lookup_cve(cve_id: str):
-    url = f"{API_BASE}/vulnerability"
+    """
+    Lookup a CVE by text-searching the /search endpoint and returning
+    the first matching vulnerability (if any).
+    """
+    url = f"{API_BASE}/search"
+    params = {
+        "text": cve_id,
+        "size": 1
+    }
     try:
-        response = httpx.get(url, params={"id": cve_id}, timeout=30)
+        response = httpx.get(url, params=params, timeout=30)
         response.raise_for_status()
-        return response.json()
-    except httpx.HTTPStatusError:
+        data = response.json()
+        items = data.get("items", [])
+        return items[0] if items else None
+    except Exception as e:
+        print(f"[ERROR] CVE lookup failed: {e}")
         return None
+
 
 
 async def lookup_euvd(euvd_id: str):
@@ -113,3 +123,35 @@ async def fetch_exploited_vulnerabilities():
         print(f"[ERROR] Could not fetch exploited vulnerabilities: {e}")
         return []
 
+
+async def fetch_latest_vulnerabilities():
+    url = f"{API_BASE}/lastvulnerabilities"
+    try:
+        response = httpx.get(url, timeout=30)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print(f"[ERROR] Could not fetch latest vulnerabilities: {e}")
+        return []
+
+
+async def fetch_critical_vulnerabilities():
+    url = f"{API_BASE}/criticalvulnerabilities"
+    params = {"size": 8}
+    try:
+        response = httpx.get(url, params=params, timeout=30)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print(f"[ERROR] Could not fetch critical vulnerabilities: {e}")
+        return []
+
+
+async def fetch_advisory(advisory_id: str):
+    url = f"{API_BASE}/advisory"
+    try:
+        response = httpx.get(url, params={"id": advisory_id}, timeout=30)
+        response.raise_for_status()
+        return response.json()
+    except httpx.HTTPStatusError:
+        return None
