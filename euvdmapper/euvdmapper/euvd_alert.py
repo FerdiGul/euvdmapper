@@ -6,9 +6,10 @@ import yaml
 from datetime import datetime
 from euvdmapper.fetch_api import fetch_euvd_entries
 
-OUTPUT_DIR = "output"
-HTML_FILE = os.path.join(OUTPUT_DIR, "watchlist.html")
-CSV_FILE = os.path.join(OUTPUT_DIR, "watchlist.csv")
+# write directly into cwd
+OUTPUT_DIR = "."
+HTML_FILE  = "watchlist.html"
+CSV_FILE   = "watchlist.csv"
 
 
 def get_cvss_label(score):
@@ -42,10 +43,6 @@ def generate_watchlist_html(data):
         .Medium { background-color: #fff3cd; }
     </style>
     <script>
-        function searchTable() {
-            let input = document.getElementById("searchInput").value.toLowerCase();
-            filterTable(input);
-        }
         function filterTable(filterText = "") {
             let vendor = document.getElementById("vendorFilter").value.toLowerCase();
             let product = document.getElementById("productFilter").value.toLowerCase();
@@ -56,7 +53,7 @@ def generate_watchlist_html(data):
                 let vendorText = row.cells[5].textContent.toLowerCase();
                 let productText = row.cells[4].textContent.toLowerCase();
                 let labelText = row.cells[3].textContent.toLowerCase();
-                let match = text.includes(filterText) &&
+                let match = text.includes(filterText.toLowerCase()) &&
                             vendorText.includes(vendor) &&
                             productText.includes(product) &&
                             labelText.includes(label);
@@ -67,7 +64,7 @@ def generate_watchlist_html(data):
 </head>
 <body>
     <h1>Customized Latest Product/Vendor Vulnerability Alert System</h1>
-    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search in report...">
+    <input type="text" id="searchInput" onkeyup="filterTable(this.value)" placeholder="Search in report...">
     <select id="vendorFilter" onchange="filterTable()">
         <option value="">Filter by Vendor</option>
     </select>
@@ -88,7 +85,6 @@ def generate_watchlist_html(data):
         </thead>
         <tbody>
 """
-
     vendor_set = set()
     product_set = set()
 
@@ -114,13 +110,10 @@ def generate_watchlist_html(data):
         let vendorFilter = document.getElementById("vendorFilter");
         let productFilter = document.getElementById("productFilter");
     """
-
     for vendor in sorted(vendor_set):
         html += f'vendorFilter.innerHTML += `<option value="{vendor}">{vendor}</option>`;\n'
-
     for product in sorted(product_set):
         html += f'productFilter.innerHTML += `<option value="{product}">{product}</option>`;\n'
-
     html += """
     </script>
 </body>
@@ -168,9 +161,8 @@ async def run_alert_mode(yaml_path):
         results = await fetch_euvd_entries(vendor=vendor)
         filtered = []
         for entry in results:
-            if not isinstance(entry.get("baseScore"), (int, float)) and not (
-                isinstance(entry.get("baseScore"), str) and entry.get("baseScore").replace(".", "").isdigit()
-            ):
+            base = entry.get("baseScore")
+            if base is None or (isinstance(base, str) and not base.replace(".", "").isdigit()):
                 continue
             products = [p["product"]["name"].lower() for p in entry.get("enisaIdProduct", []) if "product" in p]
             if any(product_query in p for p in products):
@@ -181,4 +173,3 @@ async def run_alert_mode(yaml_path):
     generate_watchlist_html(all_entries)
     save_csv(all_entries)
     print("[✓] Alert report generated as watchlist.html and watchlist.csv")
-
