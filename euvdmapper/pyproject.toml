@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "euvdmapper"
-version = "v1.5"
+version = "v1.7"
 description = "ENISA EUVD data fetcher and formatter"
 readme = "README.md"
 authors = [
