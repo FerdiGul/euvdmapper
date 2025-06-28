@@ -4,15 +4,18 @@ import csv
 import json
 import os
 import shutil
+import sys
 import textwrap
 
 from euvdmapper.euvd_alert import run_alert_mode
-
 from euvdmapper.fetch_api import (
     fetch_euvd_entries,
     lookup_cve,
     lookup_euvd,
-    fetch_exploited_vulnerabilities
+    fetch_exploited_vulnerabilities,
+    fetch_latest_vulnerabilities,
+    fetch_critical_vulnerabilities,
+    fetch_advisory
 )
 
 
@@ -32,13 +35,26 @@ def flatten_entry(entry):
         "EUVD_ID": entry.get("id", ""),
         "Alt_IDs": entry.get("aliases", "").replace("\n", ", "),
         "Exploitation": entry.get("exploitation", "Not available"),
-        "CVSS": f'v{entry.get("baseScoreVersion", "")}: {entry.get("baseScore", "")}' if entry.get("baseScore") else "",
+        "CVSS": f'v{entry.get("baseScoreVersion", "")}: {entry.get("baseScore", "")}'
+                if entry.get("baseScore") else "",
         "EPSS": entry.get("epss", ""),
-        "Product": ", ".join([p["product"]["name"] for p in entry.get("enisaIdProduct", []) if "product" in p]),
-        "Vendor": ", ".join([v["vendor"]["name"] for v in entry.get("enisaIdVendor", []) if "vendor" in v]),
+        "Product": ", ".join(
+            p["product"]["name"]
+            for p in entry.get("enisaIdProduct", [])
+            if "product" in p
+        ),
+        "Vendor": ", ".join(
+            v["vendor"]["name"]
+            for v in entry.get("enisaIdVendor", [])
+            if "vendor" in v
+        ),
         "Changed": entry.get("dateUpdated", ""),
         "Summary": entry.get("description", ""),
-        "Version": ", ".join([p.get("product_version", "") for p in entry.get("enisaIdProduct", []) if "product_version" in p]),
+        "Version": ", ".join(
+            p.get("product_version", "")
+            for p in entry.get("enisaIdProduct", [])
+            if "product_version" in p
+        ),
         "Published": entry.get("datePublished", ""),
         "Updated": entry.get("dateUpdated", ""),
         "References": entry.get("references", "").replace("\n", ", ")
@@ -56,7 +72,7 @@ def generate_html_report(data, output_file):
     html = """
     <html>
     <head>
-        <meta charset=\"UTF-8\">
+        <meta charset="UTF-8">
         <title>EUVD Vulnerability Report</title>
         <style>
             body { font-family: Arial, sans-serif; padding: 20px; }
@@ -76,56 +92,50 @@ def generate_html_report(data, output_file):
             .critical-risk { background-color: #f8d7da; }
         </style>
         <script>
-            function searchTable() {
-                let input = document.getElementById(\"searchInput\").value.toLowerCase();
-                filterTable(input);
-            }
-            function filterTable(filterText = \"\") {
-                let vendor = document.getElementById(\"vendorFilter\").value.toLowerCase();
-                let product = document.getElementById(\"productFilter\").value.toLowerCase();
-                let cvssRange = document.getElementById(\"cvssFilter\").value;
-                let rows = document.querySelectorAll(\"table tbody tr\");
+            function filterTable(filterText = "") {
+                let vendor = document.getElementById("vendorFilter").value.toLowerCase();
+                let product = document.getElementById("productFilter").value.toLowerCase();
+                let cvssRange = document.getElementById("cvssFilter").value;
+                let rows = document.querySelectorAll("table tbody tr");
                 rows.forEach(function(row) {
                     let text = row.textContent.toLowerCase();
                     let vendorText = row.cells[6].textContent.toLowerCase();
                     let productText = row.cells[5].textContent.toLowerCase();
-                    let cvssScore = parseFloat(row.cells[3].textContent.split(\":\").pop()) || 0;
+                    let cvssScore = parseFloat(row.cells[3].textContent.split(":").pop()) || 0;
                     let cvssMatch = (
-                        (cvssRange === \"all\") ||
-                        (cvssRange === \"critical\" && cvssScore >= 9.0) ||
-                        (cvssRange === \"high\" && cvssScore >= 8.0 && cvssScore < 9.0) ||
-                        (cvssRange === \"medium\" && cvssScore >= 5.0 && cvssScore < 8.0) ||
-                        (cvssRange === \"low\" && cvssScore < 5.0)
+                        (cvssRange === "all") ||
+                        (cvssRange === "critical" && cvssScore >= 9.0) ||
+                        (cvssRange === "high" && cvssScore >= 8.0 && cvssScore < 9.0) ||
+                        (cvssRange === "medium" && cvssScore >= 5.0 && cvssScore < 8.0) ||
+                        (cvssRange === "low" && cvssScore < 5.0)
                     );
-                    let match = text.includes(filterText) &&
-                                 vendorText.includes(vendor) &&
-                                 productText.includes(product) &&
-                                 cvssMatch;
-                    row.style.display = match ? \"\": \"none\";
+                    let match = text.includes(filterText.toLowerCase()) &&
+                                vendorText.includes(vendor) &&
+                                productText.includes(product) &&
+                                cvssMatch;
+                    row.style.display = match ? "" : "none";
                 });
             }
-            function exportPDF() {
-                window.print();
-            }
+            function exportPDF() { window.print(); }
         </script>
     </head>
     <body>
         <h1>EUVD Vulnerability Report</h1>
-        <input type=\"text\" id=\"searchInput\" onkeyup=\"searchTable()\" placeholder=\"Search in report...\">
-        <select id=\"vendorFilter\" onchange=\"filterTable()\">
-            <option value=\"\">Filter by Vendor</option>
+        <input type="text" id="searchInput" onkeyup="filterTable(this.value)" placeholder="Search in report...">
+        <select id="vendorFilter" onchange="filterTable()">
+            <option value="">Filter by Vendor</option>
         </select>
-        <select id=\"productFilter\" onchange=\"filterTable()\">
-            <option value=\"\">Filter by Product</option>
+        <select id="productFilter" onchange="filterTable()">
+            <option value="">Filter by Product</option>
         </select>
-        <select id=\"cvssFilter\" onchange=\"filterTable()\">
-            <option value=\"all\">All CVSS</option>
-            <option value=\"critical\">Critical (9.0+)</option>
-            <option value=\"high\">High (8.0 - 8.9)</option>
-            <option value=\"medium\">Medium (5.0 - 7.9)</option>
-            <option value=\"low\">Low (< 5.0)</option>
+        <select id="cvssFilter" onchange="filterTable()">
+            <option value="all">All CVSS</option>
+            <option value="critical">Critical (9.0+)</option>
+            <option value="high">High (8.0 - 8.9)</option>
+            <option value="medium">Medium (5.0 - 7.9)</option>
+            <option value="low">Low (&lt; 5.0)</option>
         </select>
-        <button onclick=\"exportPDF()\">Export PDF</button>
+        <button onclick="exportPDF()">Export PDF</button>
         <table>
             <thead>
                 <tr>
@@ -149,138 +159,116 @@ def generate_html_report(data, output_file):
         published = entry.get("datePublished", "")
         updated = entry.get("dateUpdated", "")
         references = entry.get("references", "").replace("\n", ", ")
-        products = ", ".join([p["product"]["name"] for p in entry.get("enisaIdProduct", []) if "product" in p])
-        versions = ", ".join([p.get("product_version", "") for p in entry.get("enisaIdProduct", []) if "product_version" in p])
-        vendors = ", ".join([v["vendor"]["name"] for v in entry.get("enisaIdVendor", []) if "vendor" in v])
+        products = ", ".join(
+            p["product"]["name"] for p in entry.get("enisaIdProduct", []) if "product" in p
+        )
+        versions = ", ".join(
+            p.get("product_version", "") for p in entry.get("enisaIdProduct", []) if "product_version" in p
+        )
+        vendors = ", ".join(
+            v["vendor"]["name"] for v in entry.get("enisaIdVendor", []) if "vendor" in v
+        )
         vendor_set.update(vendors.split(", "))
         product_set.update(products.split(", "))
         row_class = ""
         if cvss_score is not None:
             try:
                 score = float(cvss_score)
-                if score == 0.0:
-                    row_class = ""
-                elif 0.1 <= score <= 3.9:
+                if score <= 3.9:
                     row_class = "low-risk"
-                elif 4.0 <= score <= 6.9:
+                elif score <= 6.9:
                     row_class = "medium-risk"
-                elif 7.0 <= score <= 8.9:
+                elif score <= 8.9:
                     row_class = "high-risk"
-                elif 9.0 <= score <= 10.0:
+                else:
                     row_class = "critical-risk"
             except ValueError:
                 pass
         html += f"""
         <tr class="{row_class}">
-            <td>{euvd_id}</td>
-            <td>{alt_ids}</td>
-            <td>{exploitation}</td>
-            <td>{cvss}</td>
-            <td>{epss}</td>
-            <td>{products}</td>
-            <td>{vendors}</td>
-            <td>{updated}</td>
-            <td>{summary}</td>
-            <td>{versions}</td>
-            <td>{published}</td>
-            <td>{updated}</td>
-            <td>{references}</td>
+            <td>{euvd_id}</td><td>{alt_ids}</td><td>{exploitation}</td><td>{cvss}</td>
+            <td>{epss}</td><td>{products}</td><td>{vendors}</td><td>{updated}</td>
+            <td>{summary}</td><td>{versions}</td><td>{published}</td>
+            <td>{updated}</td><td>{references}</td>
         </tr>
         """
     html += """
-    </tbody>
-    </table>
-    <script>
-        let vendorFilter = document.getElementById("vendorFilter");
-        let productFilter = document.getElementById("productFilter");
+            </tbody>
+        </table>
+        <script>
+            let vendorFilter = document.getElementById("vendorFilter");
+            let productFilter = document.getElementById("productFilter");
     """
     for vendor in sorted(vendor_set):
         html += f'vendorFilter.innerHTML += `<option value="{vendor}">{vendor}</option>`;\n'
     for product in sorted(product_set):
         html += f'productFilter.innerHTML += `<option value="{product}">{product}</option>`;\n'
     html += """
-    </script>
+        </script>
     </body>
     </html>
     """
-    
-    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+    # ensure the output directory exists (or use cwd if none specified)
+    out_dir = os.path.dirname(output_file) or "."
+    os.makedirs(out_dir, exist_ok=True)
+
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(html)
 
 
 def main():
-    MIN_WIDTH_FOR_ASCII = 72
-    term_width = shutil.get_terminal_size((80, 20)).columns
-    ascii_description = "\t@Developed by Ferdi Gül | @Github: /FerdiGul\n"
-    ascii_art = r"""
-    ╔────────────────────────────────────────────────────────╗
-    │  _____ _   ___     ______                              │
-    │ | ____| | | \ \   / /  _ \                             │
-    │ |  _| | | | |\ \ / /| | | |                            │
-    │ | |___| |_| | \ V / | |_| |                            │
-    │ |_____|\___/   \_/  |____/                             │
-    │  __  __                                     _  _  _    │
-    │ |  \/  | __ _ _ __  _ __   ___ _ __  __   _/ || || |   │
-    │ | |\/| |/ _` | '_ \| '_ \ / _ \ '__| \ \ / / || || |_  │
-    │ | |  | | (_| | |_) | |_) |  __/ |     \ V /| ||__   _| │
-    │ |_|  |_|\__,_| .__/| .__/ \___|_|      \_/ |_(_) |_|   │
-    │              |_|   |_|                                 │
-    ╚────────────────────────────────────────────────────────╝
-    """
-    
-    if term_width >= MIN_WIDTH_FOR_ASCII:
-        print(ascii_art)
-        print(ascii_description)
-    else:
-        print("EUVD Mapper - ENISA EUVD Data Retriever and Formatter")
-        print(ascii_description)
-
     epilog_text = textwrap.dedent("""
         Examples:
           euvdmapper --keyword fortinet
               Searches for vulnerabilities by keyword and prints the results.
 
+          euvdmapper --keyword fortinet --no-banner | jq .
+              Searches without banner and pipes raw JSON to jq.
+
           euvdmapper --keyword fortinet --output fortinet.csv
-              Searches and exports results to CSV.
+              Exports results to CSV in the current directory.
 
-          euvdmapper --keyword fortinet --output fortinet.html
-              Generates an interactive HTML report.
-
-          euvdmapper --keyword google --output google.json
-              Exports data in JSON format.
+          euvdmapper --keyword fortinet --output reports/fortinet.html
+              Generates an HTML report under 'reports/'.
 
           euvdmapper --lookup-cve CVE-2024-1234
-              Looks up by CVE ID and prints to terminal.
+              Looks up details by CVE ID.
 
           euvdmapper --lookup-euvd EUVD-2024-5678
-              Looks up by EUVD ID and prints to terminal.
+              Looks up by EUVD ID.
 
-          euvdmapper --show-exploited --output exploited.html
-              Displays the latest exploited vulnerabilities and generates an HTML report.
+          euvdmapper --show-exploited --output exploited.csv
+              Displays the latest exploited vulnerabilities and generates an CSV report [.json or .csv] (API cap: max 8 records).
 
-          euvdmapper --show-exploited --output exploited.json
-              Displays the latest exploited vulnerabilities and exports to JSON.
+          euvdmapper --last --output last.json
+              Fetches the latest 8 vulnerabilities to last.json [.json or .csv] (API cap: max 8 records).
 
-          euvdmapper --vendor Fortinet --output fortinet.html
-              Filters vulnerabilities by vendor and generates an HTML report.
+          euvdmapper --critical --output critical.csv
+              Fetches the latest 8 critical vulnerabilities to critical.csv [.json or .csv] (API cap: max 8 records).
 
-          euvdmapper --product FortiOS --output fortios.csv
-              Filters vulnerabilities by product and exports to CSV.
+          euvdmapper --enisa-id EUVD-2025-XXXX
+              Fetches details for the given ENISA ID.
 
-          euvdmapper --keyword firewall --vendor Fortinet
-              Searches by keyword and filters by vendor.
+          euvdmapper --advisory-id cisco-sa-example-XXXX
+              Fetches advisory details by ID.
 
-          euvdmapper --keyword firewall --vendor Fortinet --product FortiGate --output combo.json
-              Full filter: keyword + vendor + product with export.
+          euvdmapper --advisory-id cisco-sa-example-XXXX | jq '.description'
+              Prints only the advisory’s main description.
 
-         euvdmapper --input watchlist.yaml --alerts
-              Uses a YAML watchlist (vendor + product pairs) to retrieve recent vulnerabilities and generates alert reports (CSV + HTML).
+          euvdmapper --advisory-id cisco-sa-example-XXXX | jq '.enisaIdAdvisories'
+              Lists all EUVD entries linked to this advisory.
+
+          euvdmapper --advisory-id cisco-sa-example-XXXX | jq '.vulnerabilityAdvisory'
+              Lists all CVE details linked to this advisory.
+
+          euvdmapper --input watchlist.yaml --alerts
+              Uses a YAML watchlist to generate alert reports (CSV + HTML).
     """)
+
 
     parser = argparse.ArgumentParser(
         prog="euvdmapper",
-        description="",
+        description="EUVD Mapper - ENISA EUVD Data Retriever and Formatter",
         epilog=epilog_text,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
@@ -294,31 +282,68 @@ def main():
     parser.add_argument("--show-exploited", action="store_true", help="Fetch latest exploited vulnerabilities")
     parser.add_argument("--input", type=str, help="YAML watchlist file (each entry must include vendor and product)")
     parser.add_argument("--alerts", action="store_true", help="Trigger alert mode using the YAML watchlist")
-
+    parser.add_argument("--no-banner", action="store_true", help="Suppress ASCII banner even on terminal")
+    parser.add_argument("--last", action="store_true", help="Show latest 8 vulnerabilities")
+    parser.add_argument("--critical", action="store_true", help="Show latest 8 critical vulnerabilities")
+    parser.add_argument("--enisa-id", type=str, help="Get vulnerability details by ENISA ID")
+    parser.add_argument("--advisory-id", type=str, help="Get advisory by ID")
 
     args = parser.parse_args()
-    
+
+    # Print banner only if output is a terminal and user did not request --no-banner
+    if sys.stdout.isatty() and not args.no_banner:
+        MIN_WIDTH_FOR_ASCII = 72
+        term_width = shutil.get_terminal_size((80, 20)).columns
+        ascii_description = "\t@Developed by Ferdi Gül | @Github: /FerdiGul\n"
+        ascii_art = r"""
+╔────────────────────────────────────────────────────────────────╗
+│ _____ _   ___     ______    __  __                             │
+│| ____| | | \ \   / /  _ \  |  \/  | __ _ _ __  _ __   ___ _ __ │
+│|  _| | | | |\ \ / /| | | | | |\/| |/ _` | '_ \| '_ \ / _ \ '__|│
+│| |___| |_| | \ V / | |_| | | |  | | (_| | |_) | |_) |  __/ |   │
+│|_____|\___/   \_/  |____/  |_|  |_|\__,_| .__/| .__/ \___|_|   │
+│                                         |_|   |_|              │   
+│                         Version: v1.5                          │
+╚────────────────────────────────────────────────────────────────╝
+"""
+        if term_width >= MIN_WIDTH_FOR_ASCII:
+            print(ascii_art)
+        else:
+            print("EUVD Mapper - ENISA EUVD Data Retriever and Formatter")
+        print(ascii_description)
+
+    # Alert mode must have both flags
     if bool(args.input) ^ bool(args.alerts):
         parser.error("Both --input and --alerts must be used together.")
-    elif args.input and args.alerts:
+    if args.input and args.alerts:
         asyncio.run(run_alert_mode(args.input))
         return
 
-
-    output_dir = "output"
-
+    # Lookups
     if args.lookup_cve:
         result = asyncio.run(lookup_cve(args.lookup_cve))
         print(json.dumps(result, indent=2))
         return
-
     if args.lookup_euvd:
         result = asyncio.run(lookup_euvd(args.lookup_euvd))
         print(json.dumps(result, indent=2))
         return
+    if args.enisa_id:
+        result = asyncio.run(lookup_euvd(args.enisa_id))
+        print(json.dumps(result, indent=2))
+        return
+    if args.advisory_id:
+        result = asyncio.run(fetch_advisory(args.advisory_id))
+        print(json.dumps(result, indent=2))
+        return
 
+    # Fetch lists
     if args.show_exploited:
         entries = asyncio.run(fetch_exploited_vulnerabilities())
+    elif args.last:
+        entries = asyncio.run(fetch_latest_vulnerabilities())
+    elif args.critical:
+        entries = asyncio.run(fetch_critical_vulnerabilities())
     else:
         if not (args.keyword or args.vendor or args.product):
             print("Please provide at least one of --keyword, --vendor, or --product")
@@ -330,36 +355,36 @@ def main():
             max_entries=args.max_entries
         ))
 
-
-
-
     if not entries:
         print("[!] No results found.")
         return
 
+    # Handle output
     if args.output:
-        output_file = os.path.join(output_dir, os.path.basename(args.output))
-        os.makedirs(output_dir, exist_ok=True)
+        output_file = args.output
+        out_dir = os.path.dirname(output_file) or "."
+        os.makedirs(out_dir, exist_ok=True)
 
-        if args.output.endswith(".json"):
+        if output_file.endswith(".json"):
             with open(output_file, "w", encoding="utf-8") as f:
                 json.dump(entries, f, indent=2)
+            print(f"[✓] JSON report saved as: {output_file}")
 
-        elif args.output.endswith(".csv"):
+        elif output_file.endswith(".csv"):
             flattened = [flatten_entry(e) for e in entries]
             with open(output_file, "w", newline="", encoding="utf-8") as f:
                 writer = csv.DictWriter(f, fieldnames=flattened[0].keys())
                 writer.writeheader()
-                for row in flattened:
-                    writer.writerow(row)
+                writer.writerows(flattened)
+            print(f"[✓] CSV report saved as: {output_file}")
 
-        elif args.output.endswith(".html"):
+        elif output_file.endswith(".html"):
             generate_html_report(entries, output_file)
             print(f"[✓] HTML report saved as: {output_file}")
+
     else:
         print(json.dumps(entries, indent=2))
 
 
 if __name__ == "__main__":
     main()
-
