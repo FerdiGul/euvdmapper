@@ -1,6 +1,4 @@
-# EUVD Mapper v1.4
-
-# Note: Development of updates and new features for version 1.5 is ongoing. v1.5 Release date: No later than June 20, 2025.
+# EUVD Mapper v1.5
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)
@@ -10,11 +8,22 @@
 > ⚙️ ENISA EUVD Data Retriever and Formatter  
 > Fetch, filter, and format data from ENISA’s Exploited Vulnerabilities Database (EUVD) with ease.
 
-<img width="512" alt="cover" src="https://github.com/user-attachments/assets/ffdeadf8-e931-4314-8b59-2089f36ab04b" />
+<img width="948" alt="banner" src="https://github.com/user-attachments/assets/55c12bac-991b-4f9c-a3c6-5deb1a50626c" />
+
+
 
 ---
 
 ✨ Features
+
+🔄 **New Lookup Flags**  
+ `--last`  Show the latest 8 EUVD entries  
+ `--critical`  Show the latest 8 critical vulnerabilities  
+ `--enisa-id`  Lookup by ENISA internal ID (EUVD-YYYY-XXXX)  
+ `--advisory-id`  Lookup full advisory details by its slug  
+
+🚫 **No-Banner Mode**  
+- `--no-banner`  Suppress the ASCII art on terminals (works with `-h` too!)  
 
 🔍 **Flexible Search**  
 Query vulnerabilities by keyword, vendor, product, or any combination.
@@ -129,6 +138,22 @@ euvdmapper --keyword firewall --vendor Fortinet --product FortiGate --output com
 euvdmapper --input watchlist.yaml --alerts
     Loads a YAML-based custom vendor/product watchlist and generates interactive HTML + CSV
     reports with CVSS-based risk levels, alt IDs, and filterable UI.
+
+euvdmapper --keyword fortinet --no-banner | jq .
+    # raw JSON output (no banner)
+
+euvdmapper --last --output last.json
+    # fetches last 8 entries (API cap: max 8)
+
+euvdmapper --critical --output critical.csv
+    # fetches last 8 critical entries (API cap: max 8)
+
+euvdmapper --enisa-id EUVD-2025-1234
+    # lookup by ENISA internal ID
+
+euvdmapper --advisory-id cisco-sa-20210315-abcd
+    # fetch full advisory metadata
+
 ```
 
 ---
