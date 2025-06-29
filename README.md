@@ -14,11 +14,11 @@
 
 ✨ Features
 
-🔄 ENISA API Change – /vulnerability → /search - NEW
-• The old /vulnerability endpoint has been replaced by /search. All lookup functions (e.g. lookup_cve) now query /search under the hood to stay in sync with ENISA’s updated API.
+🔄 **ENISA API Change** – /vulnerability → /search - NEW
+- The old /vulnerability endpoint has been replaced by /search. All lookup functions (e.g. lookup_cve) now query /search under the hood to stay in sync with ENISA’s updated API.
 
-📂 Customizable Output Directory (CWD Saving) - NEW
-• Outputs are saved relative to your current working directory (or to the path you specify). No more hard-coded output/ folder—just pass --output filename.ext (or include subdirs) and we’ll create them if needed.
+📂 **Customizable Output Directory (CWD Saving)** - NEW
+- Outputs are saved relative to your current working directory (or to the path you specify). No more hard-coded output/ folder—just pass --output filename.ext (or include subdirs) and we’ll create them if needed.
 
 🔄 **New Lookup Flags**  - NEW
  `--last`  Show the latest 8 EUVD entries  
