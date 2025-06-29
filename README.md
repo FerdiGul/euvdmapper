@@ -21,7 +21,7 @@
 - Outputs are saved relative to your current working directory (or to the path you specify). No more hard-coded output/ folder—just pass --output filename.ext (or include subdirs) and we’ll create them if needed.
 
 🔄 **New Lookup Flags**  - NEW
- `--last`  Show the latest 8 EUVD entries  
+ '--last`  Show the latest 8 EUVD entries  
  `--critical`  Show the latest 8 critical vulnerabilities  
  `--enisa-id`  Lookup by ENISA internal ID (EUVD-YYYY-XXXX)  
  `--advisory-id`  Lookup full advisory details by its slug  
