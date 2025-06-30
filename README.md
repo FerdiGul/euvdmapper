@@ -23,7 +23,6 @@
 🔄 **New Lookup Flags**  - NEW
  - '--last`  Show the latest 8 EUVD entries  
  - `--critical`  Show the latest 8 critical vulnerabilities  
- - `--enisa-id`  Lookup by ENISA internal ID (EUVD-YYYY-XXXX)  
  - `--advisory-id`  Lookup full advisory details by its slug  
 
 🚫 **No-Banner Mode**  - NEW
@@ -151,9 +150,6 @@ euvdmapper --last --output last.json
 
 euvdmapper --critical --output critical.csv
     # fetches last 8 critical entries (API cap: max 8)
-
-euvdmapper --enisa-id EUVD-2025-1234
-    # lookup by ENISA internal ID
 
 euvdmapper --advisory-id cisco-sa-20210315-abcd
     # fetch full advisory metadata
