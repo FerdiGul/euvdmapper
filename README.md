@@ -11,6 +11,7 @@
 
 
 ---
+An AI-powered feature is coming very soon. It will be integrated with the MITRE ATT&CK framework. Under Technical Analysis Matrix, AI Risk Brief, AI Confidence, and Active Defense & Detection, it will enable the creation of defense rule sets through EUVD Advanced Threat Intelligence, forming an Autonomous Shield Matrix.
 
 ✨ Features
 
