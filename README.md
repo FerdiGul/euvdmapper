@@ -7,7 +7,7 @@
 > ⚙️ ENISA EUVD Data Retriever and Formatter  
 > Fetch, filter, and format data from ENISA’s Exploited Vulnerabilities Database (EUVD) with ease.
 >
-> An AI-powered feature is coming very soon. It will be integrated with the MITRE ATT&CK framework. Under Technical Analysis Matrix, AI Risk Brief, AI Confidence, and Active Defense & Detection, it will enable the creation of defense rule sets through EUVD Advanced Threat Intelligence, forming an Autonomous Shield Matrix.
+>📢 **An AI-powered feature is coming very soon. It will be integrated with the MITRE ATT&CK framework. Under Technical Analysis Matrix, AI Risk Brief, AI Confidence, and Active Defense & Detection, it will enable the creation of defense rule sets through EUVD Advanced Threat Intelligence, forming an Autonomous Shield Matrix.**
 
 <img width="484" alt="banner" src="https://github.com/user-attachments/assets/9cbaba4c-cb21-4c78-a55c-5e8e26fc1af0" />
 
